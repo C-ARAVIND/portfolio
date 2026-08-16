@@ -482,10 +482,51 @@ footer { padding: 40px 0 50px; }
   .contact-strip { flex-direction: row; flex-wrap: wrap; }
   .card-grid, .two-col { grid-template-columns: 1fr; }
   .entry { grid-template-columns: 1fr; gap: 8px; }
+
+  /* Mobile Rotary Nav — fixed bottom right for comfortable thumb access */
+  .rotary-nav {
+    position: fixed;
+    right: 20px;
+    bottom: 24px;
+    top: auto;
+    transform: none;
+    width: 56px;
+    height: 56px;
+    z-index: 900;
+  }
+  .knob {
+    width: 56px;
+    height: 56px;
+  }
+  .knob-indicator {
+    height: 18px;
+    top: 7px;
+    transform-origin: 50% 21px;
+  }
+  .rotary-menu {
+    position: absolute;
+    right: 0;
+    bottom: 70px;
+    top: auto;
+    transform: none;
+    align-items: flex-end;
+    gap: 8px;
+  }
+  .rotary-menu a {
+    transform: translateY(14px) scale(0.95);
+    padding: 9px 16px;
+    font-size: 0.85rem;
+  }
+  .rotary-nav:hover .rotary-menu a,
+  .rotary-nav.open .rotary-menu a,
+  .rotary-nav:focus-within .rotary-menu a {
+    transform: translateY(0) scale(1);
+  }
 }
 @media (max-width: 480px) {
   .wrap { padding: 0 18px; }
   .hero { padding: 44px 0 32px; }
+  .rotary-nav { right: 16px; bottom: 18px; }
 }
 
 @media print {
