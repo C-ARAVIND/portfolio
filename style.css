@@ -1,0 +1,494 @@
+/* ============================================================
+   TOKENS
+   ============================================================ */
+:root {
+  --solder:    #0b1210;
+  --panel:     #101a17;
+  --paper:     #eae6da;
+  --trace:     #4a7c59;
+  --trace-lt:  #6fae7e;
+  --copper:    #c9a84c;
+  --ash:       #877f70;
+  --ink:       #d9d5c7;
+  --ink-dim:   #a6a294;
+  --hair:      rgba(217, 213, 199, 0.14);
+  --hair-cu:   rgba(201, 168, 76, 0.35);
+
+  --mono: 'IBM Plex Mono', 'JetBrains Mono', monospace;
+  --serif: 'IBM Plex Serif', 'Source Serif 4', Georgia, serif;
+
+  --wrap: 1160px;
+}
+
+/* ============================================================
+   SELECTION & ELECTRONICS BENCH SLIDER SCROLLBAR
+   ============================================================ */
+::selection {
+  background: rgba(201, 168, 76, 0.38);
+  color: var(--paper);
+}
+::-moz-selection {
+  background: rgba(201, 168, 76, 0.38);
+  color: var(--paper);
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: auto;
+  scrollbar-color: var(--copper) #0b1210;
+}
+
+/* Authentic Electronics Bench Hardware Fader Slider */
+::-webkit-scrollbar {
+  width: 16px;
+  height: 16px;
+}
+::-webkit-scrollbar-track {
+  background: #080d0b;
+  border-left: 1px solid rgba(201, 168, 76, 0.3);
+  box-shadow: inset 2px 0 5px rgba(0,0,0,0.85);
+  background-image: 
+    /* Central copper slot line */
+    linear-gradient(90deg, transparent 7px, rgba(201, 168, 76, 0.5) 7px, rgba(201, 168, 76, 0.5) 9px, transparent 9px),
+    /* Scale tick marks along edge */
+    repeating-linear-gradient(
+      0deg,
+      rgba(111, 174, 126, 0.45) 0px,
+      rgba(111, 174, 126, 0.45) 1px,
+      transparent 1px,
+      transparent 14px
+    );
+}
+::-webkit-scrollbar-thumb {
+  background: 
+    /* Center indicator line on hardware fader knob */
+    linear-gradient(90deg, transparent 42%, #c9a84c 42%, #c9a84c 58%, transparent 58%),
+    /* Fader knob metallic body with grip grooves */
+    repeating-linear-gradient(
+      0deg,
+      rgba(255,255,255,0.06) 0px,
+      rgba(255,255,255,0.06) 2px,
+      transparent 2px,
+      transparent 4px
+    ),
+    linear-gradient(180deg, #1c2a24 0%, #101a17 50%, #070b09 100%);
+  border: 1px solid #c9a84c;
+  border-radius: 2px;
+  box-shadow: 
+    0 3px 8px rgba(0, 0, 0, 0.8),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.7);
+  min-height: 48px;
+}
+::-webkit-scrollbar-thumb:hover {
+  border-color: #6fae7e;
+  box-shadow: 
+    0 0 12px rgba(111, 174, 126, 0.65),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  background: 
+    linear-gradient(90deg, transparent 42%, #6fae7e 42%, #6fae7e 58%, transparent 58%),
+    repeating-linear-gradient(
+      0deg,
+      rgba(255,255,255,0.08) 0px,
+      rgba(255,255,255,0.08) 2px,
+      transparent 2px,
+      transparent 4px
+    ),
+    linear-gradient(180deg, #24382f 0%, #14221e 50%, #0a120f 100%);
+}
+
+* { box-sizing: border-box; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
+
+body {
+  margin: 0;
+  background: var(--solder);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 16px;
+  line-height: 1.65;
+  cursor: none;
+}
+
+#probeCustomCursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 99999;
+  pointer-events: none;
+  overflow: visible;
+  transition: opacity 0.2s ease;
+  transform: translate3d(-100px, -100px, 0);
+}
+
+#probeCustomCursor.hidden {
+  opacity: 0;
+}
+
+/* Small hand cursor on rotary knob & menu items */
+.rotary-nav, .knob, #knobBtn, .rotary-menu a {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 11V4.5C9 3.67 9.67 3 10.5 3C11.33 3 12 3.67 12 4.5V10.5M12 10.5V2.5C12 1.67 12.67 1 13.5 1C14.33 1 15 1.67 15 2.5V10.5M15 10.5V4.5C15 3.67 15.67 3 16.5 3C17.33 3 18 3.67 18 4.5V12M9 11V8.5C9 7.67 8.33 7 7.5 7C6.67 7 6 7.67 6 8.5V14.5C6 18.09 8.91 21 12.5 21H14C17.31 21 20 18.31 20 15V11" stroke="%23c9a84c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="%23101a17"/></svg>') 8 2, pointer !important;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(217,213,199,0.05) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+a { color: var(--copper); text-decoration: none; border-bottom: 1px solid rgba(201,168,76,0.35); cursor: none; }
+a:hover, a:focus-visible { border-bottom-color: var(--copper); color: var(--paper); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--trace); outline-offset: 3px; }
+
+h1, h2, h3, .mono { font-family: var(--mono); }
+
+.wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 32px; position: relative; z-index: 1; }
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--trace-lt);
+}
+
+/* ============================================================
+   ROTARY NAV — a bench-instrument knob fixed to the viewport.
+   Hover/focus reveals section labels arranged around it, like
+   selecting a channel on a scope or function generator.
+   ============================================================ */
+.rotary-nav {
+  position: fixed;
+  right: 34px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 50;
+  width: 64px;
+  height: 64px;
+}
+
+.knob {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 34% 30%, #1c2a24 0%, #0e1613 62%, #070b09 100%);
+  border: 1px solid var(--hair-cu);
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,0.4),
+    0 6px 18px rgba(0,0,0,0.55),
+    inset 0 1px 1px rgba(255,255,255,0.05);
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+.knob:hover, .knob:focus-visible, .rotary-nav.open .knob, .rotary-nav:hover .knob {
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,0.4),
+    0 0 0 6px rgba(74,124,89,0.22),
+    0 6px 22px rgba(0,0,0,0.6),
+    inset 0 1px 1px rgba(255,255,255,0.1);
+  border-color: var(--copper);
+}
+.knob::before {
+  /* knurled edge ticks */
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: repeating-conic-gradient(
+    rgba(217,213,199,0.12) 0deg 3deg,
+    transparent 3deg 12deg
+  );
+  -webkit-mask: radial-gradient(circle, transparent 62%, #000 63%, #000 100%);
+          mask: radial-gradient(circle, transparent 62%, #000 63%, #000 100%);
+}
+
+.knob-scroll-layer {
+  position: absolute;
+  inset: 0;
+}
+.knob-indicator {
+  width: 3px;
+  height: 20px;
+  background: var(--copper);
+  border-radius: 2px;
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform-origin: 50% 24px;
+  transform: translateX(-50%) rotate(var(--knob-angle, -120deg));
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 0 8px 0 rgba(201,168,76,0.65);
+}
+.knob-label {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  color: var(--ash);
+  pointer-events: none;
+}
+
+.rotary-menu {
+  position: absolute;
+  right: 84px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+.rotary-nav:hover .rotary-menu,
+.rotary-nav.open .rotary-menu,
+.rotary-nav:focus-within .rotary-menu {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+.rotary-menu a {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--ink-dim);
+  border-bottom: none;
+  background: rgba(16,26,23,0.94);
+  border: 1px solid var(--hair);
+  padding: 8px 14px;
+  border-radius: 4px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transform: translateX(18px) scale(0.95);
+  opacity: 0;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease, color 0.15s ease, border-color 0.15s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.45);
+}
+.rotary-nav:hover .rotary-menu a,
+.rotary-nav.open .rotary-menu a,
+.rotary-nav:focus-within .rotary-menu a {
+  transform: translateX(0) scale(1);
+  opacity: 1;
+}
+.rotary-menu a.active,
+.rotary-menu a:hover,
+.rotary-menu a:focus-visible {
+  color: var(--paper);
+  border-color: var(--copper);
+  background: rgba(26,42,37,0.96);
+  box-shadow: 0 0 12px rgba(201,168,76,0.3);
+}
+.rotary-menu a .tick {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--trace-lt); flex: none;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+.rotary-menu a.active .tick,
+.rotary-menu a:hover .tick {
+  background: var(--copper);
+  box-shadow: 0 0 8px var(--copper);
+}
+
+/* Staggered Oscilloscope Step Response reveal */
+.rotary-nav:hover .rotary-menu a:nth-child(1), .rotary-nav.open .rotary-menu a:nth-child(1) { transition-delay: 0.03s; }
+.rotary-nav:hover .rotary-menu a:nth-child(2), .rotary-nav.open .rotary-menu a:nth-child(2) { transition-delay: 0.07s; }
+.rotary-nav:hover .rotary-menu a:nth-child(3), .rotary-nav.open .rotary-menu a:nth-child(3) { transition-delay: 0.11s; }
+.rotary-nav:hover .rotary-menu a:nth-child(4), .rotary-nav.open .rotary-menu a:nth-child(4) { transition-delay: 0.15s; }
+.rotary-nav:hover .rotary-menu a:nth-child(5), .rotary-nav.open .rotary-menu a:nth-child(5) { transition-delay: 0.19s; }
+.rotary-nav:hover .rotary-menu a:nth-child(6), .rotary-nav.open .rotary-menu a:nth-child(6) { transition-delay: 0.23s; }
+
+@media (max-width: 860px) {
+  .rotary-nav { right: 16px; width: 52px; height: 52px; }
+  .knob { width: 52px; height: 52px; }
+  .rotary-menu { right: 66px; }
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero { padding: 44px 0 48px; }
+.hero-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 40px; align-items: end; }
+.hero h1 {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  color: var(--paper);
+  margin: 14px 0 0;
+  line-height: 1.06;
+  letter-spacing: -0.01em;
+}
+.hero .tagline {
+  font-size: 1.12rem;
+  color: var(--ink-dim);
+  margin: 18px 0 0;
+  max-width: 56ch;
+}
+.hero .tagline .accent { color: var(--copper); font-style: italic; }
+
+.contact-strip { display: flex; flex-direction: column; gap: 10px; align-self: end; }
+.contact-strip a {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: var(--ink-dim);
+  border-bottom: none;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  transition: color 0.15s ease;
+}
+.contact-strip a:hover, .contact-strip a:focus-visible { color: var(--copper); }
+.contact-strip svg { width: 15px; height: 15px; flex: none; opacity: 0.85; }
+
+/* ============================================================
+   SECTION SCAFFOLD (no numbering, no rules)
+   ============================================================ */
+.section { padding: 56px 0; }
+.section-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 30px; }
+.section-head h2 { font-size: 1.55rem; font-weight: 600; color: var(--paper); margin: 0; letter-spacing: -0.01em; }
+.section-intro { color: var(--ink-dim); max-width: 68ch; margin: 0 0 32px; font-size: 1rem; }
+
+/* ============================================================
+   PROBE EFFECT — hovering a card is like touching a test point
+   with a multimeter probe: a trigger-sweep border draws itself,
+   and a signal ripple (like an EM/radiation pulse) expands from
+   the contact point.
+   ============================================================ */
+.probe {
+  position: relative;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.probe:hover, .probe:focus-within {
+  border-color: rgba(111,174,126,0.45);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+}
+
+/* ============================================================
+   EXPERIENCE
+   ============================================================ */
+.entry {
+  padding: 22px 0;
+  border-top: 1px solid var(--hair);
+  display: grid;
+  grid-template-columns: 190px 1fr;
+  gap: 24px;
+}
+.entry:first-child { border-top: none; padding-top: 0; }
+.entry-meta { font-family: var(--mono); font-size: 0.76rem; color: var(--ash); line-height: 1.7; }
+.entry-meta .current {
+  display: inline-block; margin-top: 6px;
+  color: var(--trace-lt); font-size: 0.68rem;
+  border: 1px solid rgba(111,174,126,0.4);
+  padding: 2px 7px; border-radius: 3px; letter-spacing: 0.06em;
+}
+.entry-title { font-weight: 700; color: var(--paper); font-size: 1.05rem; }
+.entry-org { color: var(--ash); font-size: 0.9rem; font-style: italic; margin-left: 4px; }
+.entry ul { margin: 12px 0 0; padding-left: 1.1em; color: var(--ink-dim); font-size: 0.95rem; }
+.entry li { margin-bottom: 6px; }
+.entry li::marker { color: var(--trace-lt); }
+.entry-link { font-size: 0.78rem; margin-top: 10px; display: inline-block; }
+
+/* ============================================================
+   PROJECT / PATENT CARDS
+   ============================================================ */
+.card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.card {
+  border: 1px solid var(--hair);
+  padding: 22px 24px;
+  border-radius: 4px;
+  background: var(--panel);
+  overflow: hidden;
+}
+.card-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.card h3 { margin: 0; font-size: 1.04rem; color: var(--paper); font-family: var(--serif); }
+.card .desc { color: var(--ink-dim); font-size: 0.92rem; margin: 8px 0 0; }
+.card ul { margin: 10px 0 0; padding-left: 1.1em; font-size: 0.9rem; color: var(--ink-dim); }
+.card li { margin-bottom: 5px; }
+.card li::marker { color: var(--trace-lt); }
+.card-link { font-family: var(--mono); font-size: 0.72rem; }
+.card.full { grid-column: 1 / -1; }
+
+/* ============================================================
+   EDUCATION / SKILLS TABLE
+   ============================================================ */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+.edu-entry { margin-bottom: 22px; }
+.edu-entry:last-child { margin-bottom: 0; }
+.edu-deg {
+  font-family: var(--mono); font-size: 0.68rem;
+  color: var(--solder); background: var(--copper);
+  padding: 3px 8px; border-radius: 2px; letter-spacing: 0.04em;
+}
+.edu-inst { color: var(--paper); font-weight: 700; margin-top: 8px; }
+.edu-sub { color: var(--ink-dim); font-style: italic; font-size: 0.9rem; }
+.edu-yr { font-family: var(--mono); font-size: 0.72rem; color: var(--ash); margin-top: 2px; }
+.edu-entry ul { margin: 8px 0 0; padding-left: 1.1em; font-size: 0.88rem; color: var(--ink-dim); }
+.edu-entry li::marker { color: var(--trace-lt); }
+
+.spec-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+.spec-table tr { border-top: 1px solid var(--hair); }
+.spec-table tr:first-child { border-top: none; }
+.spec-table td { padding: 12px 8px; vertical-align: top; }
+.spec-table td.label {
+  font-family: var(--mono); font-size: 0.7rem;
+  letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--trace-lt); width: 150px; padding-left: 0;
+}
+.spec-table td.value { color: var(--ink); }
+.spec-table td.value .sep { color: var(--ash); margin: 0 2px; }
+
+/* ============================================================
+   LIST SECTIONS
+   ============================================================ */
+.plain-list { list-style: none; margin: 0; padding: 0; }
+.plain-list li {
+  padding: 11px 0; border-top: 1px solid var(--hair);
+  font-size: 0.93rem; color: var(--ink-dim);
+  position: relative; padding-left: 22px;
+}
+.plain-list li:first-child { border-top: none; }
+.plain-list li::before { content: "▸"; position: absolute; left: 0; color: var(--trace-lt); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer { padding: 40px 0 50px; }
+.footer-row {
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 12px;
+  font-family: var(--mono); font-size: 0.72rem; color: var(--ash);
+  letter-spacing: 0.03em;
+}
+.footer-row .rev { color: var(--copper); }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 860px) {
+  .hero-grid { grid-template-columns: 1fr; }
+  .contact-strip { flex-direction: row; flex-wrap: wrap; }
+  .card-grid, .two-col { grid-template-columns: 1fr; }
+  .entry { grid-template-columns: 1fr; gap: 8px; }
+}
+@media (max-width: 480px) {
+  .wrap { padding: 0 18px; }
+  .hero { padding: 44px 0 32px; }
+}
+
+@media print {
+  body::before, .rotary-nav { display: none; }
+  body { background: #fff; color: #111; }
+}

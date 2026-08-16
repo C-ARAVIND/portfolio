@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Challa Aravind — Analog & RF Hardware Design Engineer</title>
+<meta name="description" content="Challa Aravind — analog and RF hardware design engineer. Board-level circuit design, PCB layout, laser drivers, and precision instrumentation.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%230b1210%22/><circle cx=%2250%22 cy=%2250%22 r=%2222%22 fill=%22none%22 stroke=%22%234a7c59%22 stroke-width=%228%22/><circle cx=%2250%22 cy=%2250%22 r=%226%22 fill=%22%23c9a84c%22/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============ ROTARY NAV — bench-instrument channel selector ============ -->
+<nav class="rotary-nav" id="rotaryNav" aria-label="Section navigation">
+  <button class="knob" id="knobBtn" aria-expanded="false" aria-controls="rotaryMenu" aria-label="Open section menu">
+    <span class="knob-scroll-layer" id="knobScrollLayer" aria-hidden="true">
+      <span class="knob-indicator" id="knobIndicator"></span>
+    </span>
+  </button>
+  <div class="rotary-menu" id="rotaryMenu">
+    <a href="#experience" data-angle="-80"><span class="tick" aria-hidden="true"></span>Experience</a>
+    <a href="#projects" data-angle="-40"><span class="tick" aria-hidden="true"></span>Projects</a>
+    <a href="#patent" data-angle="0"><span class="tick" aria-hidden="true"></span>Patent</a>
+    <a href="#education" data-angle="40"><span class="tick" aria-hidden="true"></span>Education</a>
+    <a href="#certifications" data-angle="80"><span class="tick" aria-hidden="true"></span>Certifications</a>
+    <a href="#contact" data-angle="120"><span class="tick" aria-hidden="true"></span>Contact</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow">Analog &middot; RF &middot; Hardware Design</p>
+      <h1>Challa Aravind</h1>
+      <p class="tagline">
+        I design and build circuits — from precision op-amps and laser drivers to
+        <span class="accent">PCB layout and system-level validation</span> — with about
+        14 months of hands-on, end-to-end hardware experience.
+      </p>
+    </div>
+    <div class="contact-strip">
+      <a href="mailto:aravind.stem@gmail.com">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
+        aravind.stem@gmail.com
+      </a>
+      <a href="tel:+916301056060">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        (+91) 63010-56060
+      </a>
+      <a href="https://linkedin.com/in/challa-aravind" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>
+        linkedin/challa-aravind
+      </a>
+      <a href="https://github.com/C-ARAVIND" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49 0-.24-.01-.87-.01-1.71-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.31.1-2.72 0 0 .84-.28 2.75 1.05a9.3 9.3 0 0 1 2.5-.35c.85 0 1.7.12 2.5.35 1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.46.1 2.72.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.8-4.57 5.05.36.32.68.94.68 1.9 0 1.37-.01 2.48-.01 2.81 0 .27.18.6.69.49A10.26 10.26 0 0 0 22 12.25C22 6.58 17.52 2 12 2z"/></svg>
+        C-ARAVIND
+      </a>
+      <a href="https://x.com/ARAVIND998877/" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.6 8.68L23.3 22h-6.9l-5.4-6.85L4.8 22H1.6l8.1-9.28L1 2h7.1l4.9 6.25L18.9 2zm-1.2 18h1.9L7.4 4H5.4l12.3 16z"/></svg>
+        @ARAVIND998877
+      </a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ============ EXPERIENCE ============ -->
+  <section class="section" id="experience">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Experience</h2>
+      </div>
+
+      <div class="entry">
+        <div class="entry-meta">
+          Chennai, TN<br>Jun 2026 – Aug 2026
+          <span class="current">CURRENT</span>
+        </div>
+        <div>
+          <span class="entry-title">IITM CDOT Samgnya Technologies Foundation</span><span class="entry-org">— Project Associate</span>
+          <ul>
+            <li>Taught analog circuit design and PCB design to interns and project staff from the company and IIT Madras.</li>
+            <li>Planned and designed electronic experiments and trainer kits for college students entering Quantum Communication hardware design.</li>
+            <li>Designed a Gigabit Ethernet and USB passboard in Altium Designer for deployment at telecom exchanges under the QuILA (Quantum Internet for Local Access) project.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="entry-meta">Chennai, TN<br>Jun 2025 – May 2026</div>
+        <div>
+          <span class="entry-title">Indian Institute of Technology Madras (IITM)</span><span class="entry-org">— Project Staff</span>
+          <ul>
+            <li>Designed and tested analog hardware at CQuICC (Center for Quantum Information, Communication and Computing).</li>
+            <li>Hands-on SMD soldering, PCB assembly, and debugging.</li>
+            <li>Worked on ripple measurement in switching power supplies, high-power ripple filter design, and lock-in amplifier testing.</li>
+            <li>Designed uITLA (Micro-Integrable Tunable Laser Assembly) controller PCBs and performed functional testing on Arduino-based setups.</li>
+            <li>Designed laser driver and temperature-controller PCBs using low-noise op-amps and high-resolution precision data converters (ADC/DAC), followed by system-level testing and validation.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="entry-meta">Surathkal, KA<br>Jan 2025 – Apr 2025</div>
+        <div>
+          <span class="entry-title">NITK Surathkal</span><span class="entry-org">— Project Intern</span>
+          <ul>
+            <li>Contributed to a non-invasive glucose monitoring system for continuous, painless blood-glucose quantification, under Prof. K. V. Gangadharan.</li>
+            <li>Formulated and analysed glucose-insulin regulatory dynamics using compartmental systems and control theory; ran data-driven analysis of dietary intake and pose estimation for physical-activity quantification via neural networks.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="entry-meta">Remote<br>Oct 2024 – Dec 2024</div>
+        <div>
+          <span class="entry-title">WireUnwired</span><span class="entry-org">— Technical Writer Intern</span>
+          <ul>
+            <li>Tracked current research, inventions, and advancements in AI and semiconductors.</li>
+            <li>Translated technical developments into clear writing for a general tech audience.</li>
+          </ul>
+          <a class="entry-link" href="https://www.linkedin.com/posts/challa-aravind_stem-tech-intern-activity-7253091266006024194-t2PF/" target="_blank" rel="noopener">Internship joining update →</a>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="entry-meta">Sangareddy, TG<br>Nov 2023 – May 2024</div>
+        <div>
+          <span class="entry-title">Indian Institute of Technology, Hyderabad (IITH)</span><span class="entry-org">— Research Intern</span>
+          <ul>
+            <li>Designed a thermal camera for Structural Health Monitoring (SHM) under Prof. Amit Acharya, alongside related material-science experiments.</li>
+            <li>Interfaced thermal and RGB cameras with Raspberry Pi and PC; implemented HTTP Live Streaming (HLS) for remote control over web and mobile.</li>
+            <li>Built a web frontend (HTML/CSS/JS) with a Python Flask backend, plus a companion Android app in Android Studio.</li>
+          </ul>
+          <a class="entry-link" href="https://www.linkedin.com/posts/challa-aravind_aesicd-internship-researchintern-activity-7205229211572195328-aJug/" target="_blank" rel="noopener">Internship completion certificate →</a>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="entry-meta">Remote<br>Mar 2023 – Present</div>
+        <div><span class="entry-title">RISC-V International</span><span class="entry-org">— Member</span></div>
+      </div>
+
+      <div class="entry">
+        <div class="entry-meta">Remote<br>May 2024 – Present</div>
+        <div><span class="entry-title">Space Technology Astro Community (STAC)</span><span class="entry-org">— Member</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PROJECTS ============ -->
+  <section class="section" id="projects">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Projects</h2>
+      </div>
+      <div class="card-grid">
+        <div class="card probe">
+
+          <div class="card-head">
+            <h3>Single Cycle Microprocessor (RV32I)</h3>
+            <span class="card-link"><a href="https://github.com/C-ARAVIND/rv32i" target="_blank" rel="noopener">GitHub →</a></span>
+          </div>
+          <p class="desc">Led a team designing a single-cycle microprocessor on the RISC-V ISA.</p>
+          <ul>
+            <li>Partitioned the processor into blocks, interfacing control unit and datapath.</li>
+            <li>Implemented in Verilog HDL; verified in Vivado, Icarus Verilog, and GTKWave.</li>
+            <li>Executes 47 instructions spanning arithmetic, logic, and branch operations.</li>
+          </ul>
+        </div>
+
+        <div class="card probe">
+
+          <div class="card-head"><h3>Mini Radar</h3></div>
+          <p class="desc">Built for Poly Tech Fest, initiated by the Department of Technical Education, A.P.</p>
+          <ul>
+            <li>Interfaced an ultrasonic sensor and DC motor with Arduino.</li>
+            <li>Built a GUI replicating a PPI scope to display detected targets in real time.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PATENT ============ -->
+  <section class="section" id="patent">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Patent</h2>
+      </div>
+      <div class="card probe full">
+
+        <div class="card-head">
+          <h3>Structural Health Monitoring via Infrared Thermography</h3>
+          <span class="card-link"><a href="https://www.linkedin.com/feed/update/urn:li:activity:7358018994768920577/" target="_blank" rel="noopener">Patent announcement →</a></span>
+        </div>
+        <p class="desc">Granted patent — a method and system for structural health monitoring of an object using infrared thermography, developed for Indian Navy application.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ EDUCATION + SKILLS ============ -->
+  <section class="section" id="education">
+    <div class="wrap two-col">
+      <div>
+        <div class="section-head">
+          <h2>Education</h2>
+        </div>
+        <div class="edu-entry">
+          <span class="edu-deg">BS</span>
+          <div class="edu-inst">Indian Institute of Technology Madras</div>
+          <div class="edu-sub">Electronic Systems</div>
+          <div class="edu-yr">Chennai, TN · 2026 – present</div>
+        </div>
+        <div class="edu-entry">
+          <span class="edu-deg">DIP</span>
+          <div class="edu-inst">SV Govt Polytechnic, Tirupati</div>
+          <div class="edu-sub">Electronics and Communication Engineering</div>
+          <div class="edu-yr">Tirupati, AP · 2021 – 2024</div>
+          <ul>
+            <li>GPA 9.48 / 10 — <a href="https://drive.google.com/file/d/1LwJtBr6BqBZ6x-hSnNqlxUkou88XneEC/view?usp=sharing" target="_blank" rel="noopener">DigiLocker-verified certificate</a></li>
+            <li>Ranked 1st in the ECE department.</li>
+            <li>Chief coordinator, Science &amp; Technology Club, Innovation Hub, SVGP.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-head">
+          <h2>Skills</h2>
+        </div>
+        <table class="spec-table">
+          <tr><td class="label">Languages</td><td class="value">C <span class="sep">·</span> Python <span class="sep">·</span> Verilog HDL</td></tr>
+          <tr><td class="label">EDA / Sim</td><td class="value">PSpice <span class="sep">·</span> LTspice <span class="sep">·</span> Ngspice <span class="sep">·</span> KiCad <span class="sep">·</span> Altium Designer</td></tr>
+          <tr><td class="label">Platforms</td><td class="value">Arduino <span class="sep">·</span> Raspberry Pi <span class="sep">·</span> Linux <span class="sep">·</span> Windows</td></tr>
+          <tr><td class="label">Spoken</td><td class="value">Telugu <span class="sep">·</span> Kannada <span class="sep">·</span> English <span class="sep">·</span> Hindi</td></tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CERTIFICATIONS ============ -->
+  <section class="section" id="certifications">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Certifications &amp; Participation</h2>
+      </div>
+      <ul class="plain-list">
+        <li>2nd prize, basic-level Circuit Scramble competition, Chandigarh University.</li>
+        <li>Participant, Micro Mouse competition, Chandigarh University.</li>
+        <li>Participant, Nationwide Roadshow on Digital India RISC-V VEGA Processor — Pan-India National Roadshow.</li>
+        <li>Participant, 1st &amp; 2nd Digital India RISC-V Symposium — organised by IIT Madras, MeitY, and IITM Pravartak Technologies.</li>
+        <li>Presented the Mini Radar project at Poly Tech Fest.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section class="section" id="contact" style="border-bottom: none;">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Get in touch</h2>
+      </div>
+      <p class="section-intro" style="margin-bottom: 0;">
+        Looking for analog and RF hardware design roles.
+        Reach out at <a href="mailto:aravind.stem@gmail.com">aravind.stem@gmail.com</a> or
+        <a href="tel:+916301056060">(+91) 63010-56060</a>.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap footer-row">
+    <span>DRAWN BY ARAVIND</span>
+    <span class="rev">REV: 2026.08</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ============================================================
+     ROTARY NAV — Hover reveal, knob rotation & scroll sync
+     ============================================================ */
+  var nav = document.getElementById('rotaryNav');
+  var knobBtn = document.getElementById('knobBtn');
+  var indicator = document.getElementById('knobIndicator');
+  var menu = document.getElementById('rotaryMenu');
+  var links = Array.from(menu.querySelectorAll('a'));
+  var closeTimer = null;
+  var isHoveringLink = false;
+
+  function setOpen(v) {
+    if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; }
+    nav.classList.toggle('open', v);
+    knobBtn.setAttribute('aria-expanded', String(v));
+  }
+
+  // Hover to open rotary menu with electronics step-response animation
+  nav.addEventListener('mouseenter', function () { setOpen(true); });
+  nav.addEventListener('mouseleave', function () {
+    closeTimer = window.setTimeout(function () { setOpen(false); }, 280);
+  });
+
+  knobBtn.addEventListener('click', function (e) {
+    e.stopPropagation();
+    setOpen(!nav.classList.contains('open'));
+  });
+
+  document.addEventListener('click', function (e) {
+    if (!nav.contains(e.target)) setOpen(false);
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { setOpen(false); knobBtn.focus(); }
+  });
+
+  // Section targets for continuous knob angle interpolation
+  var sectionTargets = [
+    { id: 'hero', angle: -120, el: document.querySelector('.hero') },
+    { id: 'experience', angle: -80, el: document.getElementById('experience') },
+    { id: 'projects', angle: -40, el: document.getElementById('projects') },
+    { id: 'patent', angle: 0, el: document.getElementById('patent') },
+    { id: 'education', angle: 40, el: document.getElementById('education') },
+    { id: 'certifications', angle: 80, el: document.getElementById('certifications') },
+    { id: 'contact', angle: 120, el: document.getElementById('contact') }
+  ];
+
+  var currentScrollAngle = -120;
+
+  function calculateScrollAngle() {
+    var scrollY = window.scrollY;
+    var windowH = window.innerHeight;
+    var docH = document.documentElement.scrollHeight;
+    var maxScroll = docH - windowH;
+    if (maxScroll <= 0) return -120;
+
+    var viewportTarget = scrollY + windowH * 0.35;
+
+    for (var i = 0; i < sectionTargets.length - 1; i++) {
+      var s1 = sectionTargets[i];
+      var s2 = sectionTargets[i + 1];
+      var t1 = s1.el ? s1.el.offsetTop : 0;
+      var t2 = s2.el ? s2.el.offsetTop : docH;
+
+      if (viewportTarget >= t1 && viewportTarget <= t2) {
+        var ratio = (viewportTarget - t1) / (t2 - t1);
+        return s1.angle + (s2.angle - s1.angle) * ratio;
+      }
+    }
+
+    if (viewportTarget >= sectionTargets[sectionTargets.length - 1].el.offsetTop) {
+      return sectionTargets[sectionTargets.length - 1].angle;
+    }
+
+    return -120;
+  }
+
+  function updateKnobAndNav() {
+    currentScrollAngle = calculateScrollAngle();
+
+    if (!isHoveringLink) {
+      indicator.style.setProperty('--knob-angle', currentScrollAngle.toFixed(1) + 'deg');
+    }
+
+    // Active menu link highlight
+    var viewportMid = window.scrollY + window.innerHeight * 0.35;
+    var activeId = 'hero';
+    sectionTargets.forEach(function (s) {
+      if (s.el && viewportMid >= s.el.offsetTop - 80) {
+        activeId = s.id;
+      }
+    });
+
+    links.forEach(function (a) {
+      var href = a.getAttribute('href').replace('#', '');
+      if (href === activeId) {
+        a.classList.add('active');
+      } else {
+        a.classList.remove('active');
+      }
+    });
+  }
+
+  window.addEventListener('scroll', function () {
+    if (!reduceMotion) {
+      window.requestAnimationFrame(updateKnobAndNav);
+    } else {
+      updateKnobAndNav();
+    }
+  }, { passive: true });
+
+  links.forEach(function (a) {
+    var targetAngle = a.getAttribute('data-angle');
+    a.addEventListener('mouseenter', function () {
+      isHoveringLink = true;
+      indicator.style.setProperty('--knob-angle', targetAngle + 'deg');
+    });
+    a.addEventListener('focus', function () {
+      isHoveringLink = true;
+      indicator.style.setProperty('--knob-angle', targetAngle + 'deg');
+    });
+    a.addEventListener('mouseleave', function () {
+      isHoveringLink = false;
+      indicator.style.setProperty('--knob-angle', currentScrollAngle.toFixed(1) + 'deg');
+    });
+    a.addEventListener('blur', function () {
+      isHoveringLink = false;
+      indicator.style.setProperty('--knob-angle', currentScrollAngle.toFixed(1) + 'deg');
+    });
+    a.addEventListener('click', function () {
+      setOpen(false);
+    });
+  });
+
+  updateKnobAndNav();
+
+  /* ============================================================
+     CUSTOM SHORT PROBE CURSOR WITH STEADY WAVY TRAILING WIRE
+     ============================================================ */
+  if (!reduceMotion) {
+    var cursorEl = document.createElement('div');
+    cursorEl.id = 'probeCustomCursor';
+    cursorEl.setAttribute('aria-hidden', 'true');
+    cursorEl.innerHTML = '<svg width="64" height="64" viewBox="0 0 64 64" fill="none">' +
+      '<line x1="0" y1="0" x2="4" y2="4" stroke="#eae6da" stroke-width="1.8" stroke-linecap="round"/>' +
+      '<polygon points="3,3 8,4 4,8" fill="#6fae7e"/>' +
+      '<line x1="7" y1="5" x2="5" y2="7" stroke="#c9a84c" stroke-width="2.2" stroke-linecap="round"/>' +
+      '<line x1="6" y1="6" x2="14" y2="14" stroke="#101a17" stroke-width="4.5" stroke-linecap="round"/>' +
+      '<line x1="6" y1="6" x2="14" y2="14" stroke="#4a7c59" stroke-width="3" stroke-linecap="round"/>' +
+      '<line x1="9" y1="9" x2="11" y2="11" stroke="#c9a84c" stroke-width="3" stroke-linecap="round"/>' +
+      '<path id="probeWirePath" d="M 14 14 Q 24 16 20 28 T 30 38" stroke="#4a7c59" stroke-width="1.8" stroke-linecap="round" fill="none"/>' +
+      '<path id="probeWireCore" d="M 14 14 Q 24 16 20 28 T 30 38" stroke="#c9a84c" stroke-width="0.8" stroke-linecap="round" fill="none"/>' +
+      '<circle id="probeWireTip" cx="30" cy="38" r="1.2" fill="#c9a84c"/>' +
+      '</svg>';
+    document.body.appendChild(cursorEl);
+
+    var wirePath = document.getElementById('probeWirePath');
+    var wireCore = document.getElementById('probeWireCore');
+    var wireTip = document.getElementById('probeWireTip');
+
+    var cursorX = -100, cursorY = -100;
+    var prevX = -100, prevY = -100;
+
+    // Smooth motion offset for wavy wire (zero when stationary)
+    var offsetX = 0, offsetY = 0;
+
+    window.addEventListener('mousemove', function (e) {
+      cursorX = e.clientX;
+      cursorY = e.clientY;
+
+      if (e.target && e.target.closest('#rotaryNav')) {
+        cursorEl.classList.add('hidden');
+      } else {
+        cursorEl.classList.remove('hidden');
+      }
+    }, { passive: true });
+
+    function animateProbeCursor() {
+      cursorEl.style.transform = 'translate3d(' + cursorX + 'px, ' + cursorY + 'px, 0)';
+
+      var mdx = cursorX - prevX;
+      var mdy = cursorY - prevY;
+      prevX = cursorX;
+      prevY = cursorY;
+
+      var speed = Math.sqrt(mdx * mdx + mdy * mdy);
+
+      if (speed > 0.2) {
+        var targetOx = -mdx * 0.75;
+        var targetOy = -mdy * 0.75;
+        offsetX += (targetOx - offsetX) * 0.25;
+        offsetY += (targetOy - offsetY) * 0.25;
+      } else {
+        offsetX *= 0.8;
+        offsetY *= 0.8;
+        if (Math.abs(offsetX) < 0.05) offsetX = 0;
+        if (Math.abs(offsetY) < 0.05) offsetY = 0;
+      }
+
+      var q1x = 24 + offsetX * 0.4;
+      var q1y = 16 + offsetY * 0.4;
+      var q2x = 20 + offsetX * 0.75;
+      var q2y = 28 + offsetY * 0.75;
+      var xEnd = 30 + offsetX;
+      var yEnd = 38 + offsetY;
+
+      var dPath = 'M 14 14 Q ' + q1x.toFixed(1) + ' ' + q1y.toFixed(1) + ' ' + q2x.toFixed(1) + ' ' + q2y.toFixed(1) + ' T ' + xEnd.toFixed(1) + ' ' + yEnd.toFixed(1);
+
+      wirePath.setAttribute('d', dPath);
+      wireCore.setAttribute('d', dPath);
+      wireTip.setAttribute('cx', xEnd.toFixed(1));
+      wireTip.setAttribute('cy', yEnd.toFixed(1));
+
+      window.requestAnimationFrame(animateProbeCursor);
+    }
+
+    window.requestAnimationFrame(animateProbeCursor);
+  }
+})();
+</script>
+
+</body>
+</html>
