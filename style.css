@@ -1,27 +1,83 @@
 /* ============================================================
    TOKENS
+   Default palette: "Solder & Copper" (current).
+   Three alternates are defined below as [data-theme="..."]
+   overrides on :root — see the theme switcher in the corner,
+   or just delete the switcher and hardcode your favorite by
+   copying its variable block over the :root defaults.
    ============================================================ */
 :root {
-  --solder:    #0b1210;
-  --panel:     #101a17;
-  --paper:     #eae6da;
-  --trace:     #4a7c59;
-  --trace-lt:  #6fae7e;
-  --copper:    #c9a84c;
-  --ash:       #877f70;
-  --ink:       #d9d5c7;
-  --ink-dim:   #a6a294;
-  --hair:      rgba(217, 213, 199, 0.14);
-  --hair-cu:   rgba(201, 168, 76, 0.35);
+  --solder:    #131f1b;
+  --panel:     #1c2b25;
+  --paper:     #fdfaf2;
+  --trace:     #5fbf7a;
+  --trace-lt:  #82e0a0;
+  --copper:    #f0b84e;
+  --ash:       #a3ab9e;
+  --ink:       #eef0e6;
+  --ink-dim:   #c4cbbd;
+  --hair:      rgba(238, 240, 230, 0.14);
+  --hair-cu:   rgba(240, 184, 78, 0.4);
 
   --mono: 'IBM Plex Mono', 'JetBrains Mono', monospace;
   --serif: 'IBM Plex Serif', 'Source Serif 4', Georgia, serif;
 
-  --wrap: 1160px;
+  --wrap: 1280px;
 }
 
+/* Alt 1 — "Oscilloscope Amber": near-black scope bezel, phosphor
+   amber trace instead of green, warmer overall. */
+[data-theme="amber"] {
+  --solder:    #0d0b08;
+  --panel:     #17130d;
+  --paper:     #f0e6d2;
+  --trace:     #b8842f;
+  --trace-lt:  #e0a84a;
+  --copper:    #d97b3f;
+  --ash:       #8c7d63;
+  --ink:       #ded2b8;
+  --ink-dim:   #ab9c81;
+  --hair:      rgba(240, 230, 210, 0.14);
+  --hair-cu:   rgba(217, 123, 63, 0.35);
+}
+
+/* Alt 2 — "Cold Cathode Blue": deep navy/graphite board, cool
+   cyan-blue trace with a steel-silver accent instead of copper. */
+[data-theme="cyan"] {
+  --solder:    #080d12;
+  --panel:     #0f1922;
+  --paper:     #e4ecf0;
+  --trace:     #3f7e94;
+  --trace-lt:  #5fb3cf;
+  --copper:    #9fb4c2;
+  --ash:       #6d7f8c;
+  --ink:       #cfdae0;
+  --ink-dim:   #93a4ad;
+  --hair:      rgba(228, 236, 240, 0.13);
+  --hair-cu:   rgba(159, 180, 194, 0.32);
+}
+
+/* Alt 3 — "Rev C Red": graphite board with a red trigger/warning
+   accent instead of green, brass instead of copper — a bolder,
+   higher-contrast option. */
+[data-theme="red"] {
+  --solder:    #0c0a0a;
+  --panel:     #161111;
+  --paper:     #ece6e0;
+  --trace:     #8a3b34;
+  --trace-lt:  #c65a4d;
+  --copper:    #b8985a;
+  --ash:       #877b74;
+  --ink:       #ddd3ca;
+  --ink-dim:   #a99e94;
+  --hair:      rgba(236, 230, 224, 0.13);
+  --hair-cu:   rgba(184, 152, 90, 0.34);
+}
+
+
+
 /* ============================================================
-   SELECTION & ELECTRONICS BENCH SLIDER SCROLLBAR
+   SELECTION & SCROLLBAR
    ============================================================ */
 ::selection {
   background: rgba(201, 168, 76, 0.38);
@@ -34,68 +90,30 @@
 
 html {
   scroll-behavior: smooth;
-  scrollbar-width: auto;
-  scrollbar-color: var(--copper) #0b1210;
+  scrollbar-width: thin;
+  scrollbar-color: var(--copper) #131f1b;
 }
 
-/* Authentic Electronics Bench Hardware Fader Slider */
+/* Simple rectangular scrollbar */
 ::-webkit-scrollbar {
-  width: 16px;
-  height: 16px;
+  width: 12px;
+  height: 12px;
 }
 ::-webkit-scrollbar-track {
-  background: #080d0b;
-  border-left: 1px solid rgba(201, 168, 76, 0.3);
-  box-shadow: inset 2px 0 5px rgba(0,0,0,0.85);
-  background-image: 
-    /* Central copper slot line */
-    linear-gradient(90deg, transparent 7px, rgba(201, 168, 76, 0.5) 7px, rgba(201, 168, 76, 0.5) 9px, transparent 9px),
-    /* Scale tick marks along edge */
-    repeating-linear-gradient(
-      0deg,
-      rgba(111, 174, 126, 0.45) 0px,
-      rgba(111, 174, 126, 0.45) 1px,
-      transparent 1px,
-      transparent 14px
-    );
+  background: #0f1815;
+  border-left: 1px solid rgba(201, 168, 76, 0.2);
 }
 ::-webkit-scrollbar-thumb {
-  background: 
-    /* Center indicator line on hardware fader knob */
-    linear-gradient(90deg, transparent 42%, #c9a84c 42%, #c9a84c 58%, transparent 58%),
-    /* Fader knob metallic body with grip grooves */
-    repeating-linear-gradient(
-      0deg,
-      rgba(255,255,255,0.06) 0px,
-      rgba(255,255,255,0.06) 2px,
-      transparent 2px,
-      transparent 4px
-    ),
-    linear-gradient(180deg, #1c2a24 0%, #101a17 50%, #070b09 100%);
-  border: 1px solid #c9a84c;
-  border-radius: 2px;
-  box-shadow: 
-    0 3px 8px rgba(0, 0, 0, 0.8),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.7);
+  background: linear-gradient(180deg, #2a3d34 0%, #1c2b25 50%, #101a16 100%);
+  border: 1px solid #f0b84e;
+  border-radius: 0;
   min-height: 48px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  border-color: #6fae7e;
-  box-shadow: 
-    0 0 12px rgba(111, 174, 126, 0.65),
-    inset 0 1px 0 rgba(255, 255, 255, 0.4);
-  background: 
-    linear-gradient(90deg, transparent 42%, #6fae7e 42%, #6fae7e 58%, transparent 58%),
-    repeating-linear-gradient(
-      0deg,
-      rgba(255,255,255,0.08) 0px,
-      rgba(255,255,255,0.08) 2px,
-      transparent 2px,
-      transparent 4px
-    ),
-    linear-gradient(180deg, #24382f 0%, #14221e 50%, #0a120f 100%);
+  border-color: #82e0a0;
+  background: linear-gradient(180deg, #33493e 0%, #223229 50%, #16221c 100%);
 }
+
 
 * { box-sizing: border-box; }
 @media (prefers-reduced-motion: reduce) {
@@ -110,7 +128,14 @@ body {
   font-family: var(--serif);
   font-size: 16px;
   line-height: 1.65;
-  cursor: none;
+}
+
+/* Custom probe cursor + hidden native cursor: desktop with a mouse only.
+   Touch devices (and any device without hover + a fine pointer) keep
+   their normal system cursor/finger interaction untouched. */
+@media (hover: hover) and (pointer: fine) {
+  body.has-fine-pointer { cursor: none; }
+  body.has-fine-pointer a { cursor: none; }
 }
 
 #probeCustomCursor {
@@ -122,15 +147,24 @@ body {
   overflow: visible;
   transition: opacity 0.2s ease;
   transform: translate3d(-100px, -100px, 0);
+  display: none;
+}
+body.has-fine-pointer #probeCustomCursor {
+  display: block;
 }
 
 #probeCustomCursor.hidden {
   opacity: 0;
 }
 
-/* Small hand cursor on rotary knob & menu items */
-.rotary-nav, .knob, #knobBtn, .rotary-menu a {
-  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 11V4.5C9 3.67 9.67 3 10.5 3C11.33 3 12 3.67 12 4.5V10.5M12 10.5V2.5C12 1.67 12.67 1 13.5 1C14.33 1 15 1.67 15 2.5V10.5M15 10.5V4.5C15 3.67 15.67 3 16.5 3C17.33 3 18 3.67 18 4.5V12M9 11V8.5C9 7.67 8.33 7 7.5 7C6.67 7 6 7.67 6 8.5V14.5C6 18.09 8.91 21 12.5 21H14C17.31 21 20 18.31 20 15V11" stroke="%23c9a84c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="%23101a17"/></svg>') 8 2, pointer !important;
+/* Small hand cursor on rotary knob & menu items — desktop only */
+@media (hover: hover) and (pointer: fine) {
+  body.has-fine-pointer .rotary-nav,
+  body.has-fine-pointer .knob,
+  body.has-fine-pointer #knobBtn,
+  body.has-fine-pointer .rotary-menu a {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 11V4.5C9 3.67 9.67 3 10.5 3C11.33 3 12 3.67 12 4.5V10.5M12 10.5V2.5C12 1.67 12.67 1 13.5 1C14.33 1 15 1.67 15 2.5V10.5M15 10.5V4.5C15 3.67 15.67 3 16.5 3C17.33 3 18 3.67 18 4.5V12M9 11V8.5C9 7.67 8.33 7 7.5 7C6.67 7 6 7.67 6 8.5V14.5C6 18.09 8.91 21 12.5 21H14C17.31 21 20 18.31 20 15V11" stroke="%23c9a84c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="%23101a17"/></svg>') 8 2, pointer !important;
+  }
 }
 
 body::before {
@@ -139,11 +173,11 @@ body::before {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background-image: radial-gradient(rgba(217,213,199,0.05) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(238,240,230,0.06) 1px, transparent 1px);
   background-size: 28px 28px;
 }
 
-a { color: var(--copper); text-decoration: none; border-bottom: 1px solid rgba(201,168,76,0.35); cursor: none; }
+a { color: var(--copper); text-decoration: none; border-bottom: 1px solid rgba(201,168,76,0.35); }
 a:hover, a:focus-visible { border-bottom-color: var(--copper); color: var(--paper); }
 a:focus-visible, button:focus-visible { outline: 2px solid var(--trace); outline-offset: 3px; }
 
@@ -179,7 +213,7 @@ h1, h2, h3, .mono { font-family: var(--mono); }
   height: 64px;
   border-radius: 50%;
   background:
-    radial-gradient(circle at 34% 30%, #1c2a24 0%, #0e1613 62%, #070b09 100%);
+    radial-gradient(circle at 34% 30%, #2c4038 0%, #1a2a23 62%, #101a16 100%);
   border: 1px solid var(--hair-cu);
   box-shadow:
     0 0 0 1px rgba(0,0,0,0.4),
@@ -207,7 +241,7 @@ h1, h2, h3, .mono { font-family: var(--mono); }
   inset: 0;
   border-radius: 50%;
   background: repeating-conic-gradient(
-    rgba(217,213,199,0.12) 0deg 3deg,
+    rgba(238,240,230,0.14) 0deg 3deg,
     transparent 3deg 12deg
   );
   -webkit-mask: radial-gradient(circle, transparent 62%, #000 63%, #000 100%);
@@ -461,6 +495,31 @@ h1, h2, h3, .mono { font-family: var(--mono); }
 }
 .plain-list li:first-child { border-top: none; }
 .plain-list li::before { content: "▸"; position: absolute; left: 0; color: var(--trace-lt); }
+
+/* ============================================================
+   SCROLL REVEAL — sections/cards/entries fade and rise into
+   place as they enter the viewport, toggled via JS + IntersectionObserver.
+   ============================================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+/* stagger children within a revealed group */
+.reveal-group.in-view > * {
+  transition-delay: calc(var(--reveal-i, 0) * 70ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .reveal-group > * {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
 
 /* ============================================================
    FOOTER
