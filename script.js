@@ -14,13 +14,17 @@
 
   /* ============================================================
      SCROLL REVEAL — fade + rise elements into place as they enter
-     the viewport. Falls back to "everything visible" if
-     IntersectionObserver isn't available or motion is reduced.
+     the viewport. Content is visible by default in the CSS
+     (unprimed .reveal has no opacity/transform applied); only
+     once we're sure the observer is set up do we "arm" elements
+     by adding "primed" + the html-level "js-reveal" class, so
+     there's no risk of content staying invisible if this script
+     fails, loads late, or is blocked.
      ============================================================ */
   var revealEls = document.querySelectorAll('.reveal');
-  if (reduceMotion || !('IntersectionObserver' in window)) {
-    revealEls.forEach(function (el) { el.classList.add('in-view'); });
-  } else {
+  if (!reduceMotion && 'IntersectionObserver' in window && revealEls.length) {
+    document.documentElement.classList.add('js-reveal');
+
     var revealObserver = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
@@ -32,9 +36,31 @@
 
     revealEls.forEach(function (el, i) {
       el.style.setProperty('--reveal-i', i % 8);
-      revealObserver.observe(el);
+      el.classList.add('primed');
+      // Elements already on-screen at load (e.g. above the fold,
+      // or a short page) get marked in-view immediately rather
+      // than waiting on a scroll event that may never come.
+      var r = el.getBoundingClientRect();
+      if (r.top < window.innerHeight && r.bottom > 0) {
+        el.classList.add('in-view');
+      } else {
+        revealObserver.observe(el);
+      }
     });
+
+    // Safety net: if anything is still unrevealed after a few
+    // seconds (observer misfire, layout edge case, etc.), just
+    // show it rather than leave it hidden.
+    window.setTimeout(function () {
+      document.querySelectorAll('.reveal.primed:not(.in-view)').forEach(function (el) {
+        el.classList.add('in-view');
+      });
+    }, 4000);
   }
+  /* If reduced motion, no IntersectionObserver support, or no
+     .reveal elements found, we simply do nothing — the CSS
+     default (no "js-reveal"/"primed" classes present) already
+     renders everything fully visible. */
 
 
   /* ============================================================

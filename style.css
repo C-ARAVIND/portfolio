@@ -382,16 +382,17 @@ h1, h2, h3, .mono { font-family: var(--mono); }
 }
 .hero .tagline .accent { color: var(--copper); font-style: italic; }
 
-.contact-strip { display: flex; flex-direction: column; flex-wrap: nowrap; gap: 10px; }
+.contact-strip { display: flex; flex-direction: column; flex-wrap: nowrap; gap: 10px; align-items: flex-start; }
 .contact-strip a {
   font-family: var(--mono);
   font-size: 0.82rem;
   color: var(--ink-dim);
   border-bottom: none;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 9px;
-  width: 100%;
+  width: fit-content;
+  align-self: flex-start;
   transition: color 0.15s ease;
 }
 .contact-strip a:hover, .contact-strip a:focus-visible { color: var(--copper); }
@@ -443,7 +444,7 @@ h1, h2, h3, .mono { font-family: var(--mono); }
 .entry ul { margin: 12px 0 0; padding-left: 1.1em; color: var(--ink-dim); font-size: 0.95rem; }
 .entry li { margin-bottom: 6px; }
 .entry li::marker { color: var(--trace-lt); }
-.entry-link { font-size: 0.78rem; margin-top: 10px; display: inline-block; }
+.entry-link { font-size: 0.78rem; margin-top: 10px; display: inline-block; width: fit-content; }
 
 /* ============================================================
    PROJECT / PATENT CARDS
@@ -462,7 +463,8 @@ h1, h2, h3, .mono { font-family: var(--mono); }
 .card ul { margin: 10px 0 0; padding-left: 1.1em; font-size: 0.9rem; color: var(--ink-dim); }
 .card li { margin-bottom: 5px; }
 .card li::marker { color: var(--trace-lt); }
-.card-link { font-family: var(--mono); font-size: 0.72rem; }
+.card-link { font-family: var(--mono); font-size: 0.72rem; display: inline-block; width: fit-content; }
+.card-link a { display: inline-flex; align-items: center; width: fit-content; }
 .card.full { grid-column: 1 / -1; }
 
 /* ============================================================
@@ -509,13 +511,17 @@ h1, h2, h3, .mono { font-family: var(--mono); }
 /* ============================================================
    SCROLL REVEAL — sections/cards/entries fade and rise into
    place as they enter the viewport, toggled via JS + IntersectionObserver.
+   Content is visible by default (.reveal alone) so nothing is
+   ever hidden if JS is slow, blocked, or fails; the animation
+   only applies once JS confirms it can run, via the "js-reveal"
+   class added to <html> and each element's own "primed" state.
    ============================================================ */
-.reveal {
+.js-reveal .reveal.primed {
   opacity: 0;
   transform: translateY(22px);
   transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.reveal.in-view {
+.js-reveal .reveal.primed.in-view {
   opacity: 1;
   transform: translateY(0);
 }
@@ -524,7 +530,7 @@ h1, h2, h3, .mono { font-family: var(--mono); }
   transition-delay: calc(var(--reveal-i, 0) * 70ms);
 }
 @media (prefers-reduced-motion: reduce) {
-  .reveal, .reveal-group > * {
+  .js-reveal .reveal.primed {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
