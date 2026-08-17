@@ -355,7 +355,16 @@ h1, h2, h3, .mono { font-family: var(--mono); }
    HERO
    ============================================================ */
 .hero { padding: 44px 0 48px; }
-.hero-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 40px; align-items: end; }
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 40px;
+  row-gap: 18px;
+}
+.hero-heading { grid-column: 1; grid-row: 1; }
+.hero .tagline { grid-column: 1; grid-row: 2; }
+.contact-strip { grid-column: 2; grid-row: 2; align-self: center; max-width: 320px; }
 .hero h1 {
   font-family: var(--serif);
   font-weight: 700;
@@ -368,12 +377,12 @@ h1, h2, h3, .mono { font-family: var(--mono); }
 .hero .tagline {
   font-size: 1.12rem;
   color: var(--ink-dim);
-  margin: 18px 0 0;
+  margin: 0;
   max-width: 56ch;
 }
 .hero .tagline .accent { color: var(--copper); font-style: italic; }
 
-.contact-strip { display: flex; flex-direction: column; flex-wrap: nowrap; gap: 10px; align-self: end; width: 100%; }
+.contact-strip { display: flex; flex-direction: column; flex-wrap: nowrap; gap: 10px; }
 .contact-strip a {
   font-family: var(--mono);
   font-size: 0.82rem;
@@ -538,8 +547,10 @@ footer { padding: 40px 0 50px; }
    RESPONSIVE
    ============================================================ */
 @media (max-width: 860px) {
-  .hero-grid { grid-template-columns: 1fr; }
-  .contact-strip { align-items: flex-start; }
+  .hero-grid { grid-template-columns: 1fr; grid-template-rows: auto auto auto; }
+  .hero-heading { grid-column: 1; grid-row: 1; }
+  .hero .tagline { grid-column: 1; grid-row: 2; margin-top: 4px; }
+  .contact-strip { grid-column: 1; grid-row: 3; align-self: start; align-items: flex-start; max-width: none; width: 100%; margin-top: 8px; }
   .card-grid, .two-col { grid-template-columns: 1fr; }
   .entry { grid-template-columns: 1fr; gap: 8px; }
 
