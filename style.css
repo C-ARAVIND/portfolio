@@ -373,7 +373,7 @@ h1, h2, h3, .mono { font-family: var(--mono); }
 }
 .hero .tagline .accent { color: var(--copper); font-style: italic; }
 
-.contact-strip { display: flex; flex-direction: column; gap: 10px; align-self: end; }
+.contact-strip { display: flex; flex-direction: column; flex-wrap: nowrap; gap: 10px; align-self: end; width: 100%; }
 .contact-strip a {
   font-family: var(--mono);
   font-size: 0.82rem;
@@ -382,6 +382,7 @@ h1, h2, h3, .mono { font-family: var(--mono); }
   display: flex;
   align-items: center;
   gap: 9px;
+  width: 100%;
   transition: color 0.15s ease;
 }
 .contact-strip a:hover, .contact-strip a:focus-visible { color: var(--copper); }
@@ -390,8 +391,8 @@ h1, h2, h3, .mono { font-family: var(--mono); }
 /* ============================================================
    SECTION SCAFFOLD (no numbering, no rules)
    ============================================================ */
-.section { padding: 56px 0; }
-.section-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 30px; }
+.section { padding: 40px 0; }
+.section-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 22px; }
 .section-head h2 { font-size: 1.55rem; font-weight: 600; color: var(--paper); margin: 0; letter-spacing: -0.01em; }
 .section-intro { color: var(--ink-dim); max-width: 68ch; margin: 0 0 32px; font-size: 1rem; }
 
@@ -538,7 +539,7 @@ footer { padding: 40px 0 50px; }
    ============================================================ */
 @media (max-width: 860px) {
   .hero-grid { grid-template-columns: 1fr; }
-  .contact-strip { flex-direction: row; flex-wrap: wrap; }
+  .contact-strip { align-items: flex-start; }
   .card-grid, .two-col { grid-template-columns: 1fr; }
   .entry { grid-template-columns: 1fr; gap: 8px; }
 
