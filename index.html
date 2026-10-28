@@ -13,67 +13,70 @@
 </head>
 <body>
 
-<!-- ============ CHANNELS DROPDOWN (Top-Right Fixed Menu) ============ -->
-<div class="channels-menu-wrap" id="channelsMenuWrap">
-  <button class="channels-btn" id="channelsBtn" aria-expanded="false" aria-controls="channelsDropdown" aria-label="Toggle Channels Menu">
-    <span class="channels-btn-led" aria-hidden="true"></span>
-    <span class="channels-btn-label">Channels</span>
-    <svg class="channels-btn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <path d="m6 9 6 6 6-6"/>
-    </svg>
-  </button>
-
-  <div class="channels-dropdown" id="channelsDropdown" role="menu" aria-label="Channel Selector">
-    <div class="channels-dropdown-list">
-      <a href="#hero" class="channel-item active" data-channel="0" data-target="hero" role="menuitem">
-        <span class="channel-item-tag">CH 0</span>
-        <span class="channel-item-name">Index</span>
-        <span class="channel-item-dot" aria-hidden="true"></span>
-      </a>
-      <a href="#experience" class="channel-item" data-channel="1" data-target="experience" role="menuitem">
-        <span class="channel-item-tag">CH 1</span>
-        <span class="channel-item-name">Experience</span>
-        <span class="channel-item-dot" aria-hidden="true"></span>
-      </a>
-      <a href="#projects" class="channel-item" data-channel="2" data-target="projects" role="menuitem">
-        <span class="channel-item-tag">CH 2</span>
-        <span class="channel-item-name">Projects</span>
-        <span class="channel-item-dot" aria-hidden="true"></span>
-      </a>
-      <a href="#patent" class="channel-item" data-channel="3" data-target="patent" role="menuitem">
-        <span class="channel-item-tag">CH 3</span>
-        <span class="channel-item-name">Patent</span>
-        <span class="channel-item-dot" aria-hidden="true"></span>
-      </a>
-      <a href="#skills" class="channel-item" data-channel="4" data-target="skills" role="menuitem">
-        <span class="channel-item-tag">CH 4</span>
-        <span class="channel-item-name">Skills</span>
-        <span class="channel-item-dot" aria-hidden="true"></span>
-      </a>
-      <a href="#education" class="channel-item" data-channel="5" data-target="education" role="menuitem">
-        <span class="channel-item-tag">CH 5</span>
-        <span class="channel-item-name">Education</span>
-        <span class="channel-item-dot" aria-hidden="true"></span>
-      </a>
-      <a href="#certifications" class="channel-item" data-channel="6" data-target="certifications" role="menuitem">
-        <span class="channel-item-tag">CH 6</span>
-        <span class="channel-item-name">Honors &amp; Activities</span>
-        <span class="channel-item-dot" aria-hidden="true"></span>
-      </a>
-    </div>
-  </div>
-</div>
-
 <header class="hero" id="hero">
   <!-- Interactive Oscilloscope Phosphor Canvas -->
   <canvas id="circuitCanvas" class="circuit-canvas" aria-hidden="true"></canvas>
 
   <div class="wrap hero-wrap">
-    <!-- Top Instrument Telemetry Header (Clear right side for Channels button) -->
+    <!-- Top Instrument Telemetry Header (Channels menu anchored on the right end of the line) -->
     <div class="telemetry-bar">
       <div class="telemetry-item telem-live">
         <span class="telem-led" aria-hidden="true"></span>
-        <span class="telem-mono">// ANALOG &middot; RF &middot; HARDWARE DESIGN</span>
+        <span class="telem-mono">
+          <span class="telem-full">// ANALOG &middot; RF &middot; HARDWARE DESIGN</span>
+          <span class="telem-short">// ANALOG &middot; RF</span>
+        </span>
+      </div>
+
+      <!-- CHANNELS DROPDOWN (Anchored on the other end of the line) -->
+      <div class="channels-menu-wrap" id="channelsMenuWrap">
+        <button class="channels-btn" id="channelsBtn" aria-expanded="false" aria-controls="channelsDropdown" aria-label="Toggle Channels Menu">
+          <span class="channels-btn-led" aria-hidden="true"></span>
+          <span class="channels-btn-label">Channels</span>
+          <svg class="channels-btn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m6 9 6 6 6-6"/>
+          </svg>
+        </button>
+
+        <div class="channels-dropdown" id="channelsDropdown" role="menu" aria-label="Channel Selector">
+          <div class="channels-dropdown-list">
+            <a href="#hero" class="channel-item active" data-channel="0" data-target="hero" role="menuitem">
+              <span class="channel-item-tag">CH 0</span>
+              <span class="channel-item-name">Index</span>
+              <span class="channel-item-dot" aria-hidden="true"></span>
+            </a>
+            <a href="#experience" class="channel-item" data-channel="1" data-target="experience" role="menuitem">
+              <span class="channel-item-tag">CH 1</span>
+              <span class="channel-item-name">Experience</span>
+              <span class="channel-item-dot" aria-hidden="true"></span>
+            </a>
+            <a href="#projects" class="channel-item" data-channel="2" data-target="projects" role="menuitem">
+              <span class="channel-item-tag">CH 2</span>
+              <span class="channel-item-name">Projects</span>
+              <span class="channel-item-dot" aria-hidden="true"></span>
+            </a>
+            <a href="#patent" class="channel-item" data-channel="3" data-target="patent" role="menuitem">
+              <span class="channel-item-tag">CH 3</span>
+              <span class="channel-item-name">Patent</span>
+              <span class="channel-item-dot" aria-hidden="true"></span>
+            </a>
+            <a href="#skills" class="channel-item" data-channel="4" data-target="skills" role="menuitem">
+              <span class="channel-item-tag">CH 4</span>
+              <span class="channel-item-name">Skills</span>
+              <span class="channel-item-dot" aria-hidden="true"></span>
+            </a>
+            <a href="#education" class="channel-item" data-channel="5" data-target="education" role="menuitem">
+              <span class="channel-item-tag">CH 5</span>
+              <span class="channel-item-name">Education</span>
+              <span class="channel-item-dot" aria-hidden="true"></span>
+            </a>
+            <a href="#certifications" class="channel-item" data-channel="6" data-target="certifications" role="menuitem">
+              <span class="channel-item-tag">CH 6</span>
+              <span class="channel-item-name">Honors &amp; Activities</span>
+              <span class="channel-item-dot" aria-hidden="true"></span>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -111,7 +114,7 @@
       <div class="terminals-group">
         <div class="connect-heading">
           <span class="telem-led" aria-hidden="true"></span>
-          <span class="connect-heading-text">PORTS:</span>
+          <span class="connect-heading-text">PORTS TO CONTACT:</span>
         </div>
         <div class="contact-strip">
           <a href="mailto:aravind.stem@gmail.com" class="hero-cta-chip" aria-label="Send direct email to Aravind">

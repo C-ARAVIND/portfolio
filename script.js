@@ -159,15 +159,17 @@
       }
     });
 
-    // 4. Hero background subtle depth recession on scroll
-    var heroWrapEl = document.querySelector('.hero-wrap');
-    if (heroWrapEl) {
+    // 4. Hero centerpiece subtle depth recession on scroll (applied to stage so telemetry line & dock remain fixed/crisp)
+    var heroStageEl = document.querySelector('.hero-stage');
+    if (heroStageEl) {
       var scrollY = window.scrollY;
       var windowH = window.innerHeight;
       if (scrollY <= windowH) {
         var progress = scrollY / windowH;
-        heroWrapEl.style.opacity = Math.max(0.12, 1 - progress * 1.15).toFixed(2);
-        heroWrapEl.style.transform = 'translate3d(0, ' + (progress * 35).toFixed(1) + 'px, 0) scale(' + (1 - progress * 0.04).toFixed(3) + ')';
+        heroStageEl.style.opacity = Math.max(0.15, 1 - progress * 1.15).toFixed(2);
+        heroStageEl.style.transform = 'translate3d(0, ' + (progress * 35).toFixed(1) + 'px, 0) scale(' + (1 - progress * 0.04).toFixed(3) + ')';
+      } else {
+        heroStageEl.style.opacity = '0.15';
       }
     }
   }
@@ -282,11 +284,13 @@
   }, { passive: true });
 
   window.addEventListener('resize', updateActiveChannel, { passive: true });
+
   window.addEventListener('scroll', function () {
     if (channelsMenuWrap && channelsMenuWrap.classList.contains('open')) {
       toggleChannelsMenu(false);
     }
   }, { passive: true });
+
   updateActiveChannel();
 
   /* ============================================================
