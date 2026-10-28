@@ -414,7 +414,7 @@ h1, h2, h3, .mono { font-family: var(--mono); }
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding-top: clamp(22px, 3.5vh, 40px);
+  padding-top: clamp(30px, 4.5vh, 44px);
   padding-bottom: clamp(16px, 2.5vh, 28px);
   box-sizing: border-box;
   will-change: transform, opacity;
@@ -1373,7 +1373,7 @@ footer {
   .hero-wrap {
     height: auto;
     gap: 20px;
-    padding-top: 22px;
+    padding-top: clamp(28px, 4vh, 36px);
     padding-bottom: 18px;
   }
   .hero-stage {
@@ -1441,6 +1441,9 @@ footer {
 
 /* ── Large Phones & Phablets (≤ 680px) ── */
 @media (max-width: 680px) {
+  .hero-wrap {
+    padding-top: clamp(28px, 4.5vh, 36px);
+  }
   .telem-hw-full {
     display: none !important;
   }
@@ -1676,7 +1679,7 @@ footer {
     min-height: 100svh;
   }
   .hero-wrap {
-    padding-top: 14px;
+    padding-top: 20px;
     padding-bottom: 14px;
     gap: 14px;
   }
