@@ -467,11 +467,11 @@ h1, h2, h3, .mono { font-family: var(--mono); }
   text-transform: uppercase;
 }
 
-.telem-short {
-  display: none;
+.telem-hw-short {
+  display: none !important;
 }
-.telem-full {
-  display: inline;
+.telem-hw-full {
+  display: inline !important;
 }
 
 /* Hero Stage (Primary Content) */
@@ -1420,11 +1420,11 @@ footer {
 
 /* ── Large Phones & Phablets (≤ 680px) ── */
 @media (max-width: 680px) {
-  .telem-full {
-    display: none;
+  .telem-hw-full {
+    display: none !important;
   }
-  .telem-short {
-    display: inline;
+  .telem-hw-short {
+    display: inline !important;
   }
   .telemetry-bar {
     padding-bottom: 8px;
