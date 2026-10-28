@@ -125,7 +125,7 @@ h1, h2, h3, .mono { font-family: var(--mono); }
    ============================================================ */
 .channels-menu-wrap {
   position: relative;
-  z-index: 1000;
+  z-index: 101;
   display: inline-flex;
   align-items: center;
   flex: none;
@@ -190,31 +190,30 @@ h1, h2, h3, .mono { font-family: var(--mono); }
   color: #ffd276;
 }
 
-/* Dropdown Container — opens smoothly directly from top */
+/* Dropdown Container — solid, high-contrast instrument panel, floats above all hero text */
 .channels-dropdown {
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
-  min-width: 215px;
-  background: rgba(18, 29, 25, 0.98);
-  border: 1px solid var(--hair-cu);
+  min-width: 220px;
+  background: #111e19 !important;
+  border: 1.5px solid var(--copper);
   border-radius: 6px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.65), 0 0 20px rgba(240, 184, 78, 0.12);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  padding: 6px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.95), 0 0 20px rgba(240, 184, 78, 0.2);
+  padding: 8px;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 4px;
+  z-index: 9999;
   /* Unfolds smoothly from the top */
   transform: translateY(-8px) scale(0.97);
   transform-origin: top right;
   opacity: 0;
   pointer-events: none;
   visibility: hidden;
-  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
-              opacity 0.22s ease,
-              visibility 0.28s;
+  transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.2s ease,
+              visibility 0.24s;
 }
 
 .channels-menu-wrap.open .channels-dropdown {
@@ -227,7 +226,7 @@ h1, h2, h3, .mono { font-family: var(--mono); }
 .channels-dropdown-list {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 4px;
 }
 
 .channel-item {
@@ -239,13 +238,14 @@ h1, h2, h3, .mono { font-family: var(--mono); }
   text-decoration: none;
   font-family: var(--mono);
   font-size: 0.74rem;
-  color: var(--ink-dim);
-  border: 1px solid transparent;
+  color: var(--paper);
+  background: #162620;
+  border: 1px solid rgba(240, 184, 78, 0.12);
   /* Cascades from top */
   transform: translateY(-6px);
   opacity: 0;
-  transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1),
-              opacity 0.2s ease,
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.18s ease,
               background 0.2s ease,
               border-color 0.2s ease,
               color 0.2s ease;
@@ -266,16 +266,16 @@ h1, h2, h3, .mono { font-family: var(--mono); }
 
 .channel-item:hover,
 .channel-item:focus-visible {
-  color: var(--paper);
-  background: rgba(28, 43, 37, 0.9);
-  border-color: rgba(240, 184, 78, 0.3);
+  color: #ffffff;
+  background: #1d332a;
+  border-color: rgba(240, 184, 78, 0.45);
 }
 
 .channel-item.active {
-  color: var(--paper);
-  background: rgba(28, 43, 37, 0.95);
+  color: #ffffff;
+  background: #1f3a2f;
   border-color: var(--trace-lt);
-  box-shadow: 0 0 12px rgba(95, 191, 122, 0.25);
+  box-shadow: 0 0 10px rgba(95, 191, 122, 0.3);
 }
 
 .channel-item-tag {
@@ -428,6 +428,7 @@ h1, h2, h3, .mono { font-family: var(--mono); }
   padding-bottom: 10px;
   min-height: 42px;
   position: relative;
+  z-index: 100;
   animation: appearAfterBurst 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
   animation-delay: 1.1s;
 }
@@ -1348,6 +1349,22 @@ footer {
     height: auto;
     min-height: 100svh;
     min-height: 100dvh;
+  }
+  /* Disable bottom antenna and burst delay animations completely on tablets & mobiles */
+  .em-antenna {
+    display: none !important;
+  }
+  .hero-name,
+  .hero-motto,
+  .hero-tagline,
+  .hero-philosophy,
+  .hero-bottom-bar,
+  .telemetry-bar,
+  .channels-menu-wrap {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
   }
   .hero-wrap {
     height: auto;

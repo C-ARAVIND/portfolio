@@ -308,8 +308,9 @@
     var shockwaves = [];
     var plasmaClouds = [];
     var bootStartTime = performance.now();
-    var burstDelayMs = 780;
-    var latticeFadeDuration = 550;
+    var isMobileOrTablet = window.innerWidth <= 960;
+    var burstDelayMs = isMobileOrTablet ? 0 : 780;
+    var latticeFadeDuration = isMobileOrTablet ? 0 : 550;
 
     function resizeCanvas() {
       if (!circuitCanvas || !circuitCanvas.parentElement) return;
@@ -362,8 +363,10 @@
       }
     }
 
-    window.setTimeout(spawnAntennaCloudPuffs, 100);
-    window.setTimeout(spawnAntennaCloudPuffs, 260);
+    if (!isMobileOrTablet) {
+      window.setTimeout(spawnAntennaCloudPuffs, 100);
+      window.setTimeout(spawnAntennaCloudPuffs, 260);
+    }
     window.addEventListener('resize', resizeCanvas, { passive: true });
 
     window.addEventListener('mousemove', function (e) {
