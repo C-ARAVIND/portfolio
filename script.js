@@ -13,190 +13,610 @@
   }
 
   /* ============================================================
-     SCROLL REVEAL — fade + rise elements into place as they enter
-     the viewport. Content is visible by default in the CSS
-     (unprimed .reveal has no opacity/transform applied); only
-     once we're sure the observer is set up do we "arm" elements
-     by adding "primed" + the html-level "js-reveal" class, so
-     there's no risk of content staying invisible if this script
-     fails, loads late, or is blocked.
+     SCROLL REVEAL & TELEMETRY TRACE CONTROLLER
+     The animation from Experience ONLY starts when the user starts
+     scrolling down from Experience.
      ============================================================ */
-  var revealEls = document.querySelectorAll('.reveal');
+  var revealEls = Array.from(document.querySelectorAll('.reveal'));
+  var hasStartedScrolling = false;
+
   if (!reduceMotion && 'IntersectionObserver' in window && revealEls.length) {
     document.documentElement.classList.add('js-reveal');
 
+    // All section & entry elements start primed and waiting
+    revealEls.forEach(function (el, i) {
+      el.style.setProperty('--reveal-i', i % 8);
+      el.classList.add('primed');
+    });
+
     var revealObserver = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
+        // Only trigger in-view if the user has actually started scrolling down
+        if (entry.isIntersecting && (hasStartedScrolling || window.scrollY > 24)) {
           entry.target.classList.add('in-view');
           revealObserver.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
-
-    revealEls.forEach(function (el, i) {
-      el.style.setProperty('--reveal-i', i % 8);
-      el.classList.add('primed');
-      // Elements already on-screen at load (e.g. above the fold,
-      // or a short page) get marked in-view immediately rather
-      // than waiting on a scroll event that may never come.
-      var r = el.getBoundingClientRect();
-      if (r.top < window.innerHeight && r.bottom > 0) {
-        el.classList.add('in-view');
-      } else {
-        revealObserver.observe(el);
-      }
+    }, {
+      threshold: 0.05,
+      rootMargin: '0px 0px -20px 0px'
     });
 
-    // Safety net: if anything is still unrevealed after a few
-    // seconds (observer misfire, layout edge case, etc.), just
-    // show it rather than leave it hidden.
-    window.setTimeout(function () {
-      document.querySelectorAll('.reveal.primed:not(.in-view)').forEach(function (el) {
-        el.classList.add('in-view');
-      });
-    }, 4000);
-  }
-  /* If reduced motion, no IntersectionObserver support, or no
-     .reveal elements found, we simply do nothing — the CSS
-     default (no "js-reveal"/"primed" classes present) already
-     renders everything fully visible. */
+    revealEls.forEach(function (el) {
+      revealObserver.observe(el);
+    });
 
+    function checkRevealsOnScroll() {
+      if (window.scrollY > 24) {
+        hasStartedScrolling = true;
+      }
+
+      if (hasStartedScrolling) {
+        var windowH = window.innerHeight;
+        revealEls.forEach(function (el) {
+          if (el.classList.contains('primed') && !el.classList.contains('in-view')) {
+            var r = el.getBoundingClientRect();
+            if (r.top < windowH - 20 && r.bottom > 20) {
+              el.classList.add('in-view');
+              revealObserver.unobserve(el);
+            }
+          }
+        });
+      }
+
+      // Ensure elements near the bottom of the page (e.g. Certifications) are revealed
+      var scrollBottom = window.scrollY + window.innerHeight;
+      var docHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+      if (scrollBottom >= docHeight - 80) {
+        document.querySelectorAll('.reveal.primed:not(.in-view)').forEach(function (el) {
+          el.classList.add('in-view');
+        });
+      }
+    }
+
+    window.addEventListener('scroll', checkRevealsOnScroll, { passive: true });
+  }
 
   /* ============================================================
-     ROTARY NAV — Hover reveal, knob rotation & scroll sync
+     CHANNELS DROPDOWN MENU CONTROLLER (Top-Right)
      ============================================================ */
-  var nav = document.getElementById('rotaryNav');
-  var knobBtn = document.getElementById('knobBtn');
-  var indicator = document.getElementById('knobIndicator');
-  var menu = document.getElementById('rotaryMenu');
-  var links = Array.from(menu.querySelectorAll('a'));
-  var closeTimer = null;
-  var isHoveringLink = false;
+  var channelsMenuWrap = document.getElementById('channelsMenuWrap');
+  var channelsBtn = document.getElementById('channelsBtn');
+  var channelItems = Array.from(document.querySelectorAll('.channel-item'));
 
-  function setOpen(v) {
-    if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; }
-    nav.classList.toggle('open', v);
-    knobBtn.setAttribute('aria-expanded', String(v));
-  }
-
-  // Hover to open rotary menu with electronics step-response animation
-  nav.addEventListener('mouseenter', function () { setOpen(true); });
-  nav.addEventListener('mouseleave', function () {
-    closeTimer = window.setTimeout(function () { setOpen(false); }, 280);
-  });
-
-  knobBtn.addEventListener('click', function (e) {
-    e.stopPropagation();
-    setOpen(!nav.classList.contains('open'));
-  });
-
-  document.addEventListener('click', function (e) {
-    if (!nav.contains(e.target)) setOpen(false);
-  });
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') { setOpen(false); knobBtn.focus(); }
-  });
-
-  // Section targets for continuous knob angle interpolation
-  var sectionTargets = [
-    { id: 'hero', angle: -120, el: document.querySelector('.hero') },
-    { id: 'experience', angle: -80, el: document.getElementById('experience') },
-    { id: 'projects', angle: -40, el: document.getElementById('projects') },
-    { id: 'patent', angle: 0, el: document.getElementById('patent') },
-    { id: 'education', angle: 40, el: document.getElementById('education') },
-    { id: 'certifications', angle: 80, el: document.getElementById('certifications') },
-    { id: 'contact', angle: 120, el: document.getElementById('contact') }
+  var sectionElements = [
+    { id: 'hero', ch: 0, el: document.getElementById('hero') || document.querySelector('.hero') },
+    { id: 'experience', ch: 1, el: document.getElementById('experience') },
+    { id: 'projects', ch: 2, el: document.getElementById('projects') },
+    { id: 'patent', ch: 3, el: document.getElementById('patent') },
+    { id: 'skills', ch: 4, el: document.getElementById('skills') },
+    { id: 'education', ch: 5, el: document.getElementById('education') },
+    { id: 'certifications', ch: 6, el: document.getElementById('certifications') }
   ];
 
-  var currentScrollAngle = -120;
+  var isNavClicking = false;
+  var navClickTimeout = null;
 
-  function calculateScrollAngle() {
-    var scrollY = window.scrollY;
-    var windowH = window.innerHeight;
-    var docH = document.documentElement.scrollHeight;
-    var maxScroll = docH - windowH;
-    if (maxScroll <= 0) return -120;
+  function toggleChannelsMenu(forceState) {
+    if (!channelsMenuWrap || !channelsBtn) return;
+    var isOpen = typeof forceState === 'boolean'
+      ? forceState
+      : !channelsMenuWrap.classList.contains('open');
 
-    var viewportTarget = scrollY + windowH * 0.35;
-
-    for (var i = 0; i < sectionTargets.length - 1; i++) {
-      var s1 = sectionTargets[i];
-      var s2 = sectionTargets[i + 1];
-      var t1 = s1.el ? s1.el.offsetTop : 0;
-      var t2 = s2.el ? s2.el.offsetTop : docH;
-
-      if (viewportTarget >= t1 && viewportTarget <= t2) {
-        var ratio = (viewportTarget - t1) / (t2 - t1);
-        return s1.angle + (s2.angle - s1.angle) * ratio;
-      }
+    if (isOpen) {
+      channelsMenuWrap.classList.add('open');
+      channelsBtn.setAttribute('aria-expanded', 'true');
+    } else {
+      channelsMenuWrap.classList.remove('open');
+      channelsBtn.setAttribute('aria-expanded', 'false');
     }
-
-    if (viewportTarget >= sectionTargets[sectionTargets.length - 1].el.offsetTop) {
-      return sectionTargets[sectionTargets.length - 1].angle;
-    }
-
-    return -120;
   }
 
-  function updateKnobAndNav() {
-    currentScrollAngle = calculateScrollAngle();
+  if (channelsBtn) {
+    channelsBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      toggleChannelsMenu();
+    });
+  }
 
-    if (!isHoveringLink) {
-      indicator.style.setProperty('--knob-angle', currentScrollAngle.toFixed(1) + 'deg');
+  // Close when clicking outside
+  document.addEventListener('click', function (e) {
+    if (channelsMenuWrap && channelsMenuWrap.classList.contains('open')) {
+      if (!channelsMenuWrap.contains(e.target)) {
+        toggleChannelsMenu(false);
+      }
     }
+  });
 
-    // Active menu link highlight
-    var viewportMid = window.scrollY + window.innerHeight * 0.35;
-    var activeId = 'hero';
-    sectionTargets.forEach(function (s) {
-      if (s.el && viewportMid >= s.el.offsetTop - 80) {
-        activeId = s.id;
+  // Close on Escape key
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && channelsMenuWrap && channelsMenuWrap.classList.contains('open')) {
+      toggleChannelsMenu(false);
+    }
+  });
+
+  function setActiveChannel(activeChannel) {
+    // 1. Update dropdown items
+    channelItems.forEach(function (item) {
+      var nodeCh = parseInt(item.getAttribute('data-channel'), 10);
+      if (nodeCh === activeChannel) {
+        item.classList.add('active');
+      } else {
+        item.classList.remove('active');
       }
     });
 
-    links.forEach(function (a) {
-      var href = a.getAttribute('href').replace('#', '');
-      if (href === activeId) {
-        a.classList.add('active');
+    // 2. Bidirectional feedback on section headers
+    sectionElements.forEach(function (item) {
+      if (!item.el) return;
+      var tagState = item.el.querySelector('.channel-state');
+      if (item.ch === activeChannel && item.ch > 0) {
+        item.el.classList.add('channel-locked');
+        if (tagState) tagState.textContent = 'ACTIVE';
       } else {
-        a.classList.remove('active');
+        item.el.classList.remove('channel-locked');
+        if (tagState) tagState.textContent = 'STANDBY';
       }
+    });
+
+    // 4. Hero background subtle depth recession on scroll
+    var heroWrapEl = document.querySelector('.hero-wrap');
+    if (heroWrapEl) {
+      var scrollY = window.scrollY;
+      var windowH = window.innerHeight;
+      if (scrollY <= windowH) {
+        var progress = scrollY / windowH;
+        heroWrapEl.style.opacity = Math.max(0.12, 1 - progress * 1.15).toFixed(2);
+        heroWrapEl.style.transform = 'translate3d(0, ' + (progress * 35).toFixed(1) + 'px, 0) scale(' + (1 - progress * 0.04).toFixed(3) + ')';
+      }
+    }
+  }
+
+  function updateActiveChannel() {
+    if (isNavClicking) return;
+
+    var scrollY = window.scrollY;
+    var windowH = window.innerHeight;
+
+    // A. At top of page -> Hero / Index
+    if (scrollY < windowH * 0.35) {
+      setActiveChannel(0);
+      return;
+    }
+
+    // B. Calculate prominence of each section
+    var bandTop = windowH * 0.1;
+    var bandBottom = windowH * 0.65;
+    var bestChannel = 1;
+    var highestScore = -1;
+
+    for (var i = 1; i < sectionElements.length; i++) {
+      var s = sectionElements[i];
+      if (!s.el) continue;
+      var r = s.el.getBoundingClientRect();
+
+      var oTop = Math.max(bandTop, r.top);
+      var oBottom = Math.min(bandBottom, r.bottom);
+      var overlap = Math.max(0, oBottom - oTop);
+
+      var headerBonus = 0;
+      if (r.top >= -30 && r.top <= windowH * 0.38) {
+        headerBonus = 260 - Math.abs(r.top - 36);
+      }
+
+      var score = overlap + headerBonus;
+
+      if (score > highestScore) {
+        highestScore = score;
+        bestChannel = s.ch;
+      }
+    }
+
+    setActiveChannel(bestChannel);
+  }
+
+  function scrollToSection(targetId, targetChannel) {
+    toggleChannelsMenu(false);
+    if (targetChannel > 0) {
+      hasStartedScrolling = true;
+    }
+
+    if (targetId === 'hero' || targetChannel === 0) {
+      isNavClicking = true;
+      if (navClickTimeout) clearTimeout(navClickTimeout);
+      setActiveChannel(0);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      navClickTimeout = setTimeout(function () {
+        isNavClicking = false;
+        updateActiveChannel();
+      }, 850);
+      return;
+    }
+
+    var targetEl = document.getElementById(targetId);
+    if (!targetEl) return;
+
+    var rect = targetEl.getBoundingClientRect();
+    var targetScrollY = window.scrollY + rect.top - 24;
+
+    isNavClicking = true;
+    if (navClickTimeout) clearTimeout(navClickTimeout);
+    setActiveChannel(targetChannel);
+
+    window.scrollTo({
+      top: Math.max(0, targetScrollY),
+      behavior: 'smooth'
+    });
+
+    navClickTimeout = setTimeout(function () {
+      isNavClicking = false;
+      updateActiveChannel();
+    }, 850);
+  }
+
+  // Bind click handlers to dropdown items
+  channelItems.forEach(function (item) {
+    item.addEventListener('click', function (e) {
+      e.preventDefault();
+      var targetId = item.getAttribute('data-target');
+      var targetCh = parseInt(item.getAttribute('data-channel'), 10);
+      scrollToSection(targetId, targetCh);
+    });
+  });
+
+  // Bind click handler to slide cue
+  var slideCueEl = document.querySelector('.slide-cue');
+  if (slideCueEl) {
+    slideCueEl.addEventListener('click', function (e) {
+      e.preventDefault();
+      scrollToSection('experience', 1);
     });
   }
 
   window.addEventListener('scroll', function () {
     if (!reduceMotion) {
-      window.requestAnimationFrame(updateKnobAndNav);
+      window.requestAnimationFrame(updateActiveChannel);
     } else {
-      updateKnobAndNav();
+      updateActiveChannel();
     }
   }, { passive: true });
 
-  links.forEach(function (a) {
-    var targetAngle = a.getAttribute('data-angle');
-    a.addEventListener('mouseenter', function () {
-      isHoveringLink = true;
-      indicator.style.setProperty('--knob-angle', targetAngle + 'deg');
-    });
-    a.addEventListener('focus', function () {
-      isHoveringLink = true;
-      indicator.style.setProperty('--knob-angle', targetAngle + 'deg');
-    });
-    a.addEventListener('mouseleave', function () {
-      isHoveringLink = false;
-      indicator.style.setProperty('--knob-angle', currentScrollAngle.toFixed(1) + 'deg');
-    });
-    a.addEventListener('blur', function () {
-      isHoveringLink = false;
-      indicator.style.setProperty('--knob-angle', currentScrollAngle.toFixed(1) + 'deg');
-    });
-    a.addEventListener('click', function () {
-      setOpen(false);
-    });
-  });
+  window.addEventListener('resize', updateActiveChannel, { passive: true });
+  window.addEventListener('scroll', function () {
+    if (channelsMenuWrap && channelsMenuWrap.classList.contains('open')) {
+      toggleChannelsMenu(false);
+    }
+  }, { passive: true });
+  updateActiveChannel();
 
-  updateKnobAndNav();
+  /* ============================================================
+     INTERACTIVE QUANTUM & RF ENERGY LATTICE (Hero Background)
+     Replaces the cartoonish circuit topology with an elegant,
+     ambient electromagnetic particle field with proximity laser
+     connections and dynamic probe magnetism!
+     ============================================================ */
+  var circuitCanvas = document.getElementById('circuitCanvas');
+  if (circuitCanvas && !reduceMotion) {
+    var ctx = circuitCanvas.getContext('2d');
+    var cW = 0, cH = 0;
+    var mouseX = -1, mouseY = -1;
+    var particles = [];
+    var shockwaves = [];
+    var plasmaClouds = [];
+    var bootStartTime = performance.now();
+    var burstDelayMs = 780;
+    var latticeFadeDuration = 550;
+
+    function resizeCanvas() {
+      if (!circuitCanvas || !circuitCanvas.parentElement) return;
+      cW = circuitCanvas.width = circuitCanvas.parentElement.offsetWidth;
+      cH = circuitCanvas.height = circuitCanvas.parentElement.offsetHeight;
+      initParticles();
+    }
+
+    function initParticles() {
+      particles = [];
+      // Elegant density: ~65 particles across the canvas
+      var count = Math.min(75, Math.max(45, Math.floor((cW * cH) / 14000)));
+      for (var i = 0; i < count; i++) {
+        particles.push({
+          x: Math.random() * cW,
+          y: Math.random() * cH,
+          vx: (Math.random() - 0.5) * 0.45,
+          vy: (Math.random() - 0.5) * 0.45,
+          radius: Math.random() * 2.2 + 1.2,
+          color: Math.random() > 0.4 ? '#5fbf7a' : '#f0b84e',
+          alpha: Math.random() * 0.45 + 0.35
+        });
+      }
+    }
+
+    resizeCanvas();
+
+    // Antenna EM plasma cloud puffs expanding upward on boot!
+    function spawnAntennaCloudPuffs() {
+      if (cW <= 0 || cH <= 0) return;
+      var ax = cW * 0.5;
+      var ay = cH - 18;
+
+      // Spawn 32 billowing plasma cloud puffs expanding upward
+      for (var i = 0; i < 32; i++) {
+        var angle = -Math.PI * 0.5 + (Math.random() - 0.5) * 1.5;
+        var speed = Math.random() * 4.8 + 2.2;
+        plasmaClouds.push({
+          x: ax + (Math.random() - 0.5) * 16,
+          y: ay,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed * 1.15,
+          r: Math.random() * 25 + 18,
+          maxR: Math.random() * 190 + 130,
+          growRate: Math.random() * 3.4 + 2.2,
+          opacity: Math.random() * 0.45 + 0.35,
+          fadeRate: Math.random() * 0.012 + 0.008,
+          hue: Math.random() > 0.4 ? 'copper' : 'trace'
+        });
+      }
+    }
+
+    window.setTimeout(spawnAntennaCloudPuffs, 100);
+    window.setTimeout(spawnAntennaCloudPuffs, 260);
+    window.addEventListener('resize', resizeCanvas, { passive: true });
+
+    window.addEventListener('mousemove', function (e) {
+      if (!circuitCanvas) return;
+      var r = circuitCanvas.getBoundingClientRect();
+      if (e.clientY <= r.bottom) {
+        mouseX = e.clientX - r.left;
+        mouseY = e.clientY - r.top;
+      } else {
+        mouseX = -1;
+        mouseY = -1;
+      }
+    }, { passive: true });
+
+    document.addEventListener('mouseleave', function () {
+      mouseX = -1;
+      mouseY = -1;
+    }, { passive: true });
+
+    window.addEventListener('click', function (e) {
+      if (!circuitCanvas) return;
+      var r = circuitCanvas.getBoundingClientRect();
+      if (e.clientY <= r.bottom) {
+        shockwaves.push({
+          x: e.clientX - r.left,
+          y: e.clientY - r.top,
+          r: 0,
+          maxR: 160,
+          opacity: 0.85
+        });
+      }
+    }, { passive: true });
+
+    window.addEventListener('touchstart', function (e) {
+      if (!circuitCanvas || !e.touches || !e.touches[0]) return;
+      var touch = e.touches[0];
+      var r = circuitCanvas.getBoundingClientRect();
+      if (touch.clientY <= r.bottom) {
+        mouseX = touch.clientX - r.left;
+        mouseY = touch.clientY - r.top;
+        shockwaves.push({
+          x: mouseX,
+          y: mouseY,
+          r: 0,
+          maxR: 140,
+          opacity: 0.85
+        });
+      }
+    }, { passive: true });
+
+    window.addEventListener('touchmove', function (e) {
+      if (!circuitCanvas || !e.touches || !e.touches[0]) return;
+      var touch = e.touches[0];
+      var r = circuitCanvas.getBoundingClientRect();
+      if (touch.clientY <= r.bottom) {
+        mouseX = touch.clientX - r.left;
+        mouseY = touch.clientY - r.top;
+      } else {
+        mouseX = -1;
+        mouseY = -1;
+      }
+    }, { passive: true });
+
+    window.addEventListener('touchend', function () {
+      mouseX = -1;
+      mouseY = -1;
+    }, { passive: true });
+
+    function renderLattice() {
+      if (window.scrollY > cH + 60) {
+        window.requestAnimationFrame(renderLattice);
+        return;
+      }
+
+      ctx.clearRect(0, 0, cW, cH);
+
+      // 1. Subtle Radial RF Graticule & Radar Rings
+      ctx.save();
+      var cx = cW * 0.5;
+      var cy = cH * 0.5;
+      ctx.strokeStyle = 'rgba(95, 191, 122, 0.04)';
+      ctx.lineWidth = 1;
+
+      var maxRingR = Math.min(cW, cH) * 0.45;
+      for (var ring = 1; ring <= 4; ring++) {
+        ctx.beginPath();
+        ctx.arc(cx, cy, (maxRingR / 4) * ring, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      // Crosshair lines
+      ctx.beginPath();
+      ctx.moveTo(cx - maxRingR, cy); ctx.lineTo(cx + maxRingR, cy);
+      ctx.moveTo(cx, cy - maxRingR); ctx.lineTo(cx, cy + maxRingR);
+      ctx.stroke();
+      ctx.restore();
+
+      // 2. Billowing EM Plasma Clouds from Antenna Burst
+      if (plasmaClouds.length) {
+        ctx.save();
+        for (var cIdx = plasmaClouds.length - 1; cIdx >= 0; cIdx--) {
+          var puff = plasmaClouds[cIdx];
+          puff.x += puff.vx;
+          puff.y += puff.vy;
+          puff.vx *= 0.965; // Viscous deceleration
+          puff.vy *= 0.965;
+          puff.r = Math.min(puff.maxR, puff.r + puff.growRate);
+          puff.opacity -= puff.fadeRate;
+
+          if (puff.opacity <= 0.01) {
+            plasmaClouds.splice(cIdx, 1);
+            continue;
+          }
+
+          var grad = ctx.createRadialGradient(puff.x, puff.y, 0, puff.x, puff.y, puff.r);
+          if (puff.hue === 'copper') {
+            grad.addColorStop(0, 'rgba(255, 245, 215, ' + (puff.opacity * 0.9) + ')');
+            grad.addColorStop(0.35, 'rgba(240, 184, 78, ' + (puff.opacity * 0.6) + ')');
+            grad.addColorStop(0.7, 'rgba(180, 120, 50, ' + (puff.opacity * 0.22) + ')');
+            grad.addColorStop(1, 'rgba(19, 31, 27, 0)');
+          } else {
+            grad.addColorStop(0, 'rgba(230, 255, 240, ' + (puff.opacity * 0.85) + ')');
+            grad.addColorStop(0.4, 'rgba(95, 191, 122, ' + (puff.opacity * 0.5) + ')');
+            grad.addColorStop(0.75, 'rgba(40, 110, 70, ' + (puff.opacity * 0.18) + ')');
+            grad.addColorStop(1, 'rgba(19, 31, 27, 0)');
+          }
+
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(puff.x, puff.y, puff.r, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Push nearby particles with the billowing cloud
+          particles.forEach(function (p) {
+            var d = Math.hypot(p.x - puff.x, p.y - puff.y);
+            if (d < puff.r * 1.1) {
+              var ang = Math.atan2(p.y - puff.y, p.x - puff.x);
+              p.x += Math.cos(ang) * 1.6;
+              p.y += Math.sin(ang) * 1.6;
+            }
+          });
+        }
+        ctx.restore();
+      }
+
+      // 3. Shockwave Discharges from Click
+      if (shockwaves.length) {
+        ctx.save();
+        for (var sw = shockwaves.length - 1; sw >= 0; sw--) {
+          var shock = shockwaves[sw];
+          shock.r += 3.8;
+          shock.opacity *= 0.95;
+
+          ctx.strokeStyle = 'rgba(240, 184, 78, ' + shock.opacity + ')';
+          ctx.lineWidth = 1.4;
+          ctx.beginPath();
+          ctx.arc(shock.x, shock.y, shock.r, 0, Math.PI * 2);
+          ctx.stroke();
+
+          // Push nearby particles outward
+          particles.forEach(function (p) {
+            var dist = Math.hypot(p.x - shock.x, p.y - shock.y);
+            if (Math.abs(dist - shock.r) < 20) {
+              var angle = Math.atan2(p.y - shock.y, p.x - shock.x);
+              p.x += Math.cos(angle) * 2;
+              p.y += Math.sin(angle) * 2;
+            }
+          });
+
+          if (shock.opacity < 0.03 || shock.r > shock.maxR) {
+            shockwaves.splice(sw, 1);
+          }
+        }
+        ctx.restore();
+      }
+
+      // 3. Update & Draw Particles (Always active)
+      for (var i = 0; i < particles.length; i++) {
+        var p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // Wrap around canvas edges
+        if (p.x < 0) p.x = cW;
+        if (p.x > cW) p.x = 0;
+        if (p.y < 0) p.y = cH;
+        if (p.y > cH) p.y = 0;
+
+        // Multimeter Probe Magnetism
+        if (mouseX > 0) {
+          var dx = mouseX - p.x;
+          var dy = mouseY - p.y;
+          var mDist = Math.sqrt(dx * dx + dy * dy);
+          if (mDist < 160) {
+            var force = (1 - mDist / 160) * 0.04;
+            p.x += dx * force;
+            p.y += dy * force;
+          }
+        }
+      }
+
+      // 4. Draw Proximity Laser Threads Between Nodes
+      ctx.save();
+      ctx.lineWidth = 0.9;
+      for (var a = 0; a < particles.length; a++) {
+        for (var b = a + 1; b < particles.length; b++) {
+          var pa = particles[a];
+          var pb = particles[b];
+          var dist = Math.hypot(pa.x - pb.x, pa.y - pb.y);
+          if (dist < 110) {
+            var alpha = (1 - dist / 110) * 0.22;
+            ctx.strokeStyle = 'rgba(95, 191, 122, ' + alpha + ')';
+            ctx.beginPath();
+            ctx.moveTo(pa.x, pa.y);
+            ctx.lineTo(pb.x, pb.y);
+            ctx.stroke();
+          }
+        }
+      }
+      ctx.restore();
+
+      // 5. Connect Probe Tip to Nearest Nodes
+      if (mouseX > 0) {
+        ctx.save();
+        ctx.lineWidth = 1.2;
+        particles.forEach(function (p) {
+          var pDist = Math.hypot(p.x - mouseX, p.y - mouseY);
+          if (pDist < 140) {
+            var pAlpha = (1 - pDist / 140) * 0.45;
+            ctx.strokeStyle = 'rgba(240, 184, 78, ' + pAlpha + ')';
+            ctx.beginPath();
+            ctx.moveTo(mouseX, mouseY);
+            ctx.lineTo(p.x, p.y);
+            ctx.stroke();
+          }
+        });
+        ctx.restore();
+      }
+
+      // 6. Draw Glowing Nodes
+      ctx.save();
+      particles.forEach(function (p) {
+        ctx.shadowBlur = 6;
+        ctx.shadowColor = p.color;
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.alpha;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      ctx.restore();
+
+      window.requestAnimationFrame(renderLattice);
+    }
+
+    window.requestAnimationFrame(renderLattice);
+  }
 
   /* ============================================================
      CUSTOM SHORT PROBE CURSOR WITH STEADY WAVY TRAILING WIRE
@@ -230,6 +650,15 @@
       '<circle id="probeWireTip" cx="30" cy="38" r="1.2" fill="#f0b84e"/>' +
       '</svg>';
     document.body.appendChild(cursorEl);
+    cursorEl.classList.add('hidden');
+    window.setTimeout(function () {
+      cursorEl.classList.remove('hidden');
+    }, 1200);
+
+    window.setTimeout(function () {
+      var ant = document.getElementById('emAntenna');
+      if (ant) ant.style.display = 'none';
+    }, 1250);
 
     var wirePath = document.getElementById('probeWirePath');
     var wireCore = document.getElementById('probeWireCore');
