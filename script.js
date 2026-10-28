@@ -235,6 +235,26 @@
       return;
     }
 
+    if (targetId === 'experience') {
+      var deckTab = document.querySelector('.deck-tab');
+      var deckTargetTop = deckTab
+        ? window.scrollY + deckTab.getBoundingClientRect().top - 8
+        : window.scrollY + (document.getElementById('experience') ? document.getElementById('experience').getBoundingClientRect().top - 24 : 0);
+
+      isNavClicking = true;
+      if (navClickTimeout) clearTimeout(navClickTimeout);
+      setActiveChannel(1);
+      window.scrollTo({
+        top: Math.max(0, deckTargetTop),
+        behavior: 'smooth'
+      });
+      navClickTimeout = setTimeout(function () {
+        isNavClicking = false;
+        updateActiveChannel();
+      }, 850);
+      return;
+    }
+
     var targetEl = document.getElementById(targetId);
     if (!targetEl) return;
 
@@ -274,6 +294,74 @@
       scrollToSection('experience', 1);
     });
   }
+
+  /* ============================================================
+     HERO TO EXPERIENCE DIRECT SWIPE / SLIDE CONTROLLER
+     A swipe up from the main page directly slides up to Experience,
+     landing with SYSTEM LOGS // ACHIEVEMENTS & ARCHIVES at the top.
+     ============================================================ */
+  var deckTabEl = document.querySelector('.deck-tab');
+
+  function getDeckTabScrollTop() {
+    if (!deckTabEl) {
+      deckTabEl = document.querySelector('.deck-tab');
+    }
+    if (!deckTabEl) return window.innerHeight;
+    var rect = deckTabEl.getBoundingClientRect();
+    return Math.max(0, window.scrollY + rect.top - 8);
+  }
+
+  var touchStartY = null;
+  var touchStartX = null;
+  var isSwipingFromHero = false;
+
+  window.addEventListener('touchstart', function (e) {
+    if (!e.touches || !e.touches[0]) return;
+    touchStartY = e.touches[0].clientY;
+    touchStartX = e.touches[0].clientX;
+    isSwipingFromHero = (window.scrollY < 80);
+  }, { passive: true });
+
+  window.addEventListener('touchend', function (e) {
+    if (touchStartY === null || !e.changedTouches || !e.changedTouches[0]) return;
+    var deltaY = touchStartY - e.changedTouches[0].clientY; // positive = dragged up
+    var deltaX = Math.abs(e.changedTouches[0].clientX - touchStartX);
+
+    // If swiped UP from hero with sufficient distance:
+    if (isSwipingFromHero && deltaY > 36 && deltaY > deltaX * 1.1) {
+      isNavClicking = true;
+      if (navClickTimeout) clearTimeout(navClickTimeout);
+      setActiveChannel(1);
+      window.scrollTo({
+        top: getDeckTabScrollTop(),
+        behavior: 'smooth'
+      });
+      navClickTimeout = setTimeout(function () {
+        isNavClicking = false;
+        updateActiveChannel();
+      }, 750);
+    }
+    // If user is near deck-tab and swipes DOWN:
+    else if (window.scrollY > 80 && window.scrollY <= getDeckTabScrollTop() + 100) {
+      if (deltaY < -40 && Math.abs(deltaY) > deltaX * 1.1) {
+        isNavClicking = true;
+        if (navClickTimeout) clearTimeout(navClickTimeout);
+        setActiveChannel(0);
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+        navClickTimeout = setTimeout(function () {
+          isNavClicking = false;
+          updateActiveChannel();
+        }, 750);
+      }
+    }
+
+    touchStartY = null;
+    touchStartX = null;
+    isSwipingFromHero = false;
+  }, { passive: true });
 
   window.addEventListener('scroll', function () {
     if (!reduceMotion) {

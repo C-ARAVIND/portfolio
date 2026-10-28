@@ -36,6 +36,7 @@
 /* Completely remove browser right-side scrollbar */
 html {
   scroll-behavior: smooth;
+  scroll-snap-type: y proximity;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE & Edge */
 }
@@ -377,6 +378,7 @@ h1, h2, h3, .mono { font-family: var(--mono); }
   position: relative;
   min-height: 100vh;
   min-height: 100dvh;
+  scroll-snap-align: start;
   z-index: 1;
   display: flex;
   flex-direction: column;
@@ -995,6 +997,8 @@ main {
   padding: 24px 0 12px;
   max-width: var(--wrap);
   margin: 0 auto;
+  scroll-snap-align: start;
+  scroll-margin-top: 8px;
 }
 .deck-trace-line {
   flex: 1;
